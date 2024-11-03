@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "domain"
+		},
+		{
+			"path": "service"
+		},
+		{
+			"path": "data"
+		},
+		{
+			"path": "application"
+		}
+	],
+	"settings": {}
+}
