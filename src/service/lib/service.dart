@@ -1,8 +1,5 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
 library;
 
-export 'src/service_base.dart';
-
-// TODO: Export any libraries intended for clients of this package.
+export 'src/services/assets_service.dart';
+export 'src/services/companies_service.dart';
+export 'src/services/locations_service.dart';
