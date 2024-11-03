@@ -1,20 +1,19 @@
-import 'package:application/app/modules/companies/companies_store.dart';
+import 'package:application/app/modules/assets/assets_store.dart';
+import 'package:application/app/modules/assets/widgets/asset_list_item_view.dart';
 import 'package:application/app/modules/companies/widgets/company_list_view_skeleton_loader.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import 'company_list_item_view.dart';
-
-class CompanyListView extends StatefulWidget {
-  const CompanyListView({super.key});
+class AssetListView extends StatefulWidget {
+  const AssetListView({super.key});
 
   @override
-  State<CompanyListView> createState() => _CompanyListViewState();
+  State<AssetListView> createState() => _AssetListViewState();
 }
 
-class _CompanyListViewState extends State<CompanyListView> {
+class _AssetListViewState extends State<AssetListView> {
   // #region Members 'Overrides' :: initState()
 
   @override
@@ -34,12 +33,12 @@ class _CompanyListViewState extends State<CompanyListView> {
   // #region Members 'Store' :: controller, onRefresh()
 
   /// Controlador
-  final controller = Modular.get<CompaniesStore>();
+  final controller = Modular.get<AssetsStore>();
 
   /// Ao atualizar
   Future<void> onRefresh() async {
     try {
-      await this.controller.queryCompanies();
+      await this.controller.queryAssets();
     } catch (exception) {
       throw Exception("Fail in onRefreshing(): $exception");
     }
@@ -47,20 +46,7 @@ class _CompanyListViewState extends State<CompanyListView> {
 
   // #endregion
 
-  // #region Members 'Company' :: onSelect()
-
-  /// Ao selecionar
-  Future<void> onSelect(Company company) async {
-    try {
-      await Modular.to.pushNamed('/assets/', forRoot: true, arguments: company);
-    } on Exception catch (exception) {
-      throw Exception("Fail in onSelect(): $exception");
-    }
-  }
-
-  // #endregion
-
-  // #region Members 'Build' :: build()
+  // #region Members 'Builds' :: build()
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +57,14 @@ class _CompanyListViewState extends State<CompanyListView> {
           padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 30),
           child: !this.controller.isLoading
               ? ListView.separated(
-                  itemCount: this.controller.companies.length,
+                  itemCount: this.controller.assets.length,
                   separatorBuilder: (context, index) {
                     return const Padding(padding: EdgeInsets.only(bottom: 40));
                   },
                   itemBuilder: (context, index) {
-                    Company company = this.controller.companies[index];
-                    return CompanyListItemView(
-                      company: company,
-                      onSelect: this.onSelect,
+                    Asset asset = this.controller.assets[index];
+                    return AssetListItemView(
+                      asset: asset,
                     );
                   },
                 )

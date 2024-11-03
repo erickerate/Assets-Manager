@@ -33,27 +33,32 @@ class _CompanyListItemViewState extends State<CompanyListItemView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 76,
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-      decoration: BoxDecoration(
-        color: const Color(0xFF023b78),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            "assets/images/company.png",
-          ),
-          const Padding(padding: EdgeInsets.only(right: 16)),
-          Text(
-            this.widget.company.name ?? "",
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.white,
+    return GestureDetector(
+      onTap: () async {
+        await this.widget.onSelect(this.widget.company);
+      },
+      child: Container(
+        height: 76,
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+        decoration: BoxDecoration(
+          color: const Color(0xFF2188FF),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              "assets/images/company.png",
             ),
-          )
-        ],
+            const Padding(padding: EdgeInsets.only(right: 16)),
+            Text(
+              this.widget.company.name ?? "",
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

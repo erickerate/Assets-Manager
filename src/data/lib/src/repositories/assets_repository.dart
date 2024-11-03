@@ -3,7 +3,7 @@ import 'package:domain/domain.dart';
 import 'package:http/http.dart' as http;
 
 /// Implementação do repositório de recursos utilizando requisições HTTP
-class AssetsRepository implements IRepository<Asset> {
+class AssetsRepository implements IAssetsRepository {
   // #region Constructors
 
   /// Implementação do repositório de recursos utilizando requisições HTTP
@@ -14,7 +14,8 @@ class AssetsRepository implements IRepository<Asset> {
   // #region Members 'Owner' :: company
 
   /// Empresa
-  final Company company;
+  @override
+  Company company;
 
   // #endregion
 

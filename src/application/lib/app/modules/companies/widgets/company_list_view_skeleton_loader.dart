@@ -67,7 +67,7 @@ class _CompanyListViewSkeletonLoaderState
           ),
           items: 1,
           period: const Duration(seconds: 2),
-          highlightColor: const Color(0xFF023b78),
+          highlightColor: const Color(0xFF2188FF),
           direction: SkeletonDirection.ltr,
         ),
       ),

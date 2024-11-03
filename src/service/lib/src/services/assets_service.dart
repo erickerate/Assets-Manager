@@ -1,7 +1,7 @@
 import 'package:domain/domain.dart';
 
 /// Serviço para recursos
-class AssetsService implements IService<Asset> {
+class AssetsService implements IAssetsService {
   // #region Constructors
 
   /// Serviço para recursos
@@ -13,11 +13,16 @@ class AssetsService implements IService<Asset> {
 
   /// Repositório
   @override
-  IRepository<Asset> repository;
+  IAssetsRepository repository;
 
   // #endregion
 
   // #region Members 'Service' :: getAll()
+
+  @override
+  Company get company {
+    return this.repository.company;
+  }
 
   /// Obter todos recursos
   @override

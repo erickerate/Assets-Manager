@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
+import 'package:application/app/modules/assets/assets_module.dart';
 import 'package:application/app/modules/companies/companies_store.dart';
 import 'package:application/app/modules/companies/companies_view.dart';
 import 'package:data/data.dart';
@@ -20,5 +21,6 @@ class CompaniesModule extends Module {
   @override
   void routes(r) {
     r.child('/', child: (_) => const CompaniesView());
+    r.module('/assets', module: AssetsModule());
   }
 }

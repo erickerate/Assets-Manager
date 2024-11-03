@@ -1,16 +1,17 @@
 import 'package:domain/domain.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-part 'companies_store.g.dart';
+part 'assets_store.g.dart';
 
-/// Loja de empresas
-class CompaniesStore = _CompaniesStoreBase with _$CompaniesStore;
+/// Loja de recursos
+class AssetsStore = _AssetsStoreBase with _$AssetsStore;
 
-abstract class _CompaniesStoreBase with Store {
+/// Loja de recursos
+abstract class _AssetsStoreBase with Store {
   // #region Constructors
 
-  _CompaniesStoreBase() {
-    this.service = Modular.get<IService<Company>>();
+  _AssetsStoreBase() {
+    this.service = Modular.get<IAssetsService>();
   }
 
   // #endregion
@@ -18,27 +19,33 @@ abstract class _CompaniesStoreBase with Store {
   // #region Members 'Service' :: service
 
   /// Serviço
-  late IService<Company> service;
+  late IAssetsService service;
+
+  /// Empresas
+  @computed
+  Company get company {
+    return this.service.company;
+  }
 
   // #endregion
 
-  // #region Members 'Companies' :: companies, queryCompanies()
+  // #region Members 'Assets' :: assets, queryAssets()
 
   /// Empresas
   @observable
-  List<Company> companies = <Company>[];
+  List<Asset> assets = <Asset>[];
 
-  /// Definir listagem
+  /// Buscar recursos
   @action
-  Future<void> queryCompanies() async {
+  Future<void> queryAssets() async {
     try {
       this.setIsLoading(true);
 
-      this.companies = await this.service.getAll();
+      this.assets = await this.service.getAll();
 
       this.setIsLoading(false);
     } catch (exception) {
-      throw Exception('Fail in queryCompanies(): $exception');
+      throw Exception('Fail in queryAssets(): $exception');
     }
   }
 
