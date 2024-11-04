@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:domain/domain.dart';
 import 'package:domain/src/models/assets/assets_tree.dart';
-import 'package:domain/src/models/assets/tree_item.dart';
+import 'package:domain/src/models/assets/assets_tree_item.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -28,13 +28,13 @@ void main() {
 
       printTree(assetsTree.treeItems);
 
-      expect(assetsTree.treeItems, isA<List<TreeItem>>());
+      expect(assetsTree.treeItems, isA<List<AssetsTreeItem>>());
     });
   });
 }
 
-void printTree(List<TreeItem> treeItems, [String prefix = '']) {
-  for (TreeItem treeItem in treeItems) {
+void printTree(List<AssetsTreeItem> treeItems, [String prefix = '']) {
+  for (AssetsTreeItem treeItem in treeItems) {
     print('$prefix${treeItem.description}');
     printTree(treeItem.children, '$prefix  ');
   }

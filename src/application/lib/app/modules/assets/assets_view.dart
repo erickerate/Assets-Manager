@@ -1,6 +1,5 @@
 import 'package:application/app/modules/assets/assets_store.dart';
-import 'package:application/app/modules/assets/widgets/asset_list_view.dart';
-import 'package:domain/domain.dart';
+import 'package:application/app/modules/assets/widgets/assets_tree_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -44,7 +43,7 @@ class _AssetsViewState extends State<AssetsView> {
         flexibleSpace: SafeArea(
           child: Center(
             child: Text(
-              "Assets / ${this.controller.service.company.name!}",
+              "Assets / ${this.controller.assetsService.company.name!}",
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -64,22 +63,24 @@ class _AssetsViewState extends State<AssetsView> {
             Container(
               width: double.infinity,
               height: 104,
-              padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(width: 1, color: Color(0xFFEAEEF2)),
                 ),
               ),
-              child: const Column(
-                children: [
-                  Text("Filtro de texto"),
-                  Text("Filtro de estado"),
-                ],
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                child: const Column(
+                  children: [
+                    Text("Filtro de texto"),
+                    Text("Filtro de estado"),
+                  ],
+                ),
               ),
             ),
-            // Flexible(
-            //   child: AssetListView(),
-            // ),
+            const Flexible(
+              child: TreeAssetsListView(),
+            ),
           ],
         ),
       ),

@@ -11,21 +11,33 @@ abstract class _AssetsStoreBase with Store {
   // #region Constructors
 
   _AssetsStoreBase() {
-    this.service = Modular.get<IAssetsService>();
+    this.assetsService = Modular.get<IAssetsService>();
+    this.locationsService = Modular.get<IService<Location>>();
   }
 
   // #endregion
 
-  // #region Members 'Service' :: service
+  // #region Members 'Services' :: assetsService, locationsService, company
 
-  /// Serviço
-  late IAssetsService service;
+  /// Serviço de recursos
+  late IAssetsService assetsService;
+
+  /// Serviço de localizações
+  late IService<Location> locationsService;
 
   /// Empresas
   @computed
   Company get company {
-    return this.service.company;
+    return this.assetsService.company;
   }
+
+  // #endregion
+
+  // #region Members 'Assets Tree' :: assetsTree
+
+  /// Árvore
+  @observable
+  late AssetsTree assetsTree;
 
   // #endregion
 
@@ -41,13 +53,27 @@ abstract class _AssetsStoreBase with Store {
     try {
       this.setIsLoading(true);
 
-      this.assets = await this.service.getAll();
+      this.assets = await this.assetsService.getAll();
+      this.locations = await this.locationsService.getAll();
+
+      this.assetsTree = AssetsTree(
+        locations: this.locations,
+        assets: this.assets,
+      );
 
       this.setIsLoading(false);
     } catch (exception) {
       throw Exception('Fail in queryAssets(): $exception');
     }
   }
+
+  // #endregion
+
+  // #region Members 'Locations' :: locations
+
+  /// Localizações
+  @observable
+  List<Location> locations = <Location>[];
 
   // #endregion
 

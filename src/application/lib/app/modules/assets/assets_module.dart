@@ -17,9 +17,15 @@ class AssetsModule extends Module {
     i.addInstance<IAssetsRepository>(AssetsRepository(
       company: i.get<Company>(),
     ));
-
     i.addInstance<IAssetsService>(AssetsService(
       repository: i.get<IAssetsRepository>(),
+    ));
+
+    i.addInstance<IRepository<Location>>(LocationsRepository(
+      company: i.get<Company>(),
+    ));
+    i.addInstance<IService<Location>>(LocationsService(
+      repository: i.get<IRepository<Location>>(),
     ));
 
     i.addSingleton(AssetsStore.new);

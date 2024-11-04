@@ -1,6 +1,4 @@
-import 'package:darq/darq.dart';
 import 'package:domain/domain.dart';
-import 'package:domain/src/models/assets/tree_item.dart';
 
 /// Modelo para árvore de ativos
 class AssetsTree {
@@ -10,7 +8,9 @@ class AssetsTree {
   AssetsTree({
     required this.locations,
     required this.assets,
-  });
+  }) {
+    this.buildTree();
+  }
 
   // #endregion
 
@@ -27,7 +27,7 @@ class AssetsTree {
   // #region Members 'Tree' :: treeItems, buildTree()
 
   /// Itens
-  List<TreeItem> treeItems = <TreeItem>[];
+  List<AssetsTreeItem> treeItems = <AssetsTreeItem>[];
 
   /// Construir árvore
   void buildTree() {
@@ -35,25 +35,25 @@ class AssetsTree {
       // #region 1. Cria itens Localizações / Recursos
 
       this.treeItems.clear();
-      List<TreeItem> allTreeItems = <TreeItem>[];
+      List<AssetsTreeItem> allTreeItems = <AssetsTreeItem>[];
 
-      List<TreeItem> locationTreeItems = this
+      List<AssetsTreeItem> locationTreeItems = this
           .locations
-          .map((location) => TreeItem.fromLocation(location))
+          .map((location) => AssetsTreeItem.fromLocation(location))
           .toList();
       allTreeItems.addAll(locationTreeItems);
 
-      List<TreeItem> assetTreeItems =
-          this.assets.map((asset) => TreeItem.fromAsset(asset)).toList();
+      List<AssetsTreeItem> assetTreeItems =
+          this.assets.map((asset) => AssetsTreeItem.fromAsset(asset)).toList();
       allTreeItems.addAll(assetTreeItems);
 
       // #endregion
 
       // #region 2 Constrói árvore
 
-      List<TreeItem> orphanTreeItems =
+      List<AssetsTreeItem> orphanTreeItems =
           allTreeItems.where((w) => w.parentId == null).toList();
-      for (TreeItem orphanTreeItem in orphanTreeItems) {
+      for (AssetsTreeItem orphanTreeItem in orphanTreeItems) {
         this.addChildren(allTreeItems, orphanTreeItem);
 
         this.treeItems.add(orphanTreeItem);
@@ -66,10 +66,11 @@ class AssetsTree {
   }
 
   /// Adicionar filhos
-  void addChildren(List<TreeItem> allTreeItems, TreeItem treeItem) {
+  void addChildren(List<AssetsTreeItem> allTreeItems, AssetsTreeItem treeItem) {
     try {
-      for (TreeItem child
+      for (AssetsTreeItem child
           in allTreeItems.where((w) => w.parentId == treeItem.id)) {
+        child.parent = treeItem;
         treeItem.children.add(child);
         this.addChildren(allTreeItems, child);
       }

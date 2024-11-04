@@ -1,21 +1,21 @@
 import 'package:domain/domain.dart';
 
-/// Item da árvore
-class TreeItem {
+/// Item da árvore de ativos
+class AssetsTreeItem {
   // #region Constructors
 
   /// Item da árvore
-  TreeItem({
+  AssetsTreeItem({
     required this.id,
     required this.parentId,
     required this.type,
     required this.description,
-    this.iconKey,
+    this.stateIconKey,
   });
 
   // #endregion
 
-  // #region Members 'Header' :: id, parentId, description, type, iconKey,
+  // #region Members 'Header' :: id, parentId, description, type, iconKey, level
 
   /// Identificador
   final String id;
@@ -30,17 +30,33 @@ class TreeItem {
   final String type;
 
   /// Chave de ícone
-  final String? iconKey;
+  final String? stateIconKey;
+
+  /// Nível
+  int get level {
+    if (this.parent != null) {
+      return this.parent!.level + 1;
+    }
+
+    return 1;
+  }
+
+  // #endregion
+
+  // #region Members 'Navigations' :: parent
+
+  /// Pai
+  AssetsTreeItem? parent;
 
   // #endregion
 
   // #region Members 'Children' :: children, addChild()
 
   /// Filhos
-  List<TreeItem> children = <TreeItem>[];
+  List<AssetsTreeItem> children = <AssetsTreeItem>[];
 
   /// Adicionar filho
-  void addChild(TreeItem item) {
+  void addChild(AssetsTreeItem item) {
     this.children.add(item);
   }
 
@@ -49,8 +65,8 @@ class TreeItem {
   // #region Members 'Create' :: fromLocation(), fromAsset()
 
   /// Criar item a partir da localização
-  static TreeItem fromLocation(Location location) {
-    return TreeItem(
+  static AssetsTreeItem fromLocation(Location location) {
+    return AssetsTreeItem(
       id: location.id!,
       parentId: location.parentId,
       type: "location",
@@ -59,15 +75,15 @@ class TreeItem {
   }
 
   /// Criar item a partir do recurso
-  static TreeItem fromAsset(Asset asset) {
-    return TreeItem(
+  static AssetsTreeItem fromAsset(Asset asset) {
+    return AssetsTreeItem(
       id: asset.id!,
       parentId: asset.parentId ?? asset.locationId,
       type: asset.sensorId != null && asset.sensorType != null
           ? "component"
           : "asset",
       description: asset.name!,
-      iconKey: asset.status,
+      stateIconKey: asset.status,
     );
   }
 
