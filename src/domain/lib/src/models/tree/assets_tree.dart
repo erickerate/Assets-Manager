@@ -31,95 +31,44 @@ class AssetsTree {
 
   // #endregion
 
-  // #region Members 'Utils' :: getFirstBorns(), getFirstBorn(), buildDescendants(), getDescendants()
+  // #region Members 'Utils' :: buildFirstBorns(), getFirstBorn()
 
-  /// Obter primogênitos
-  List<TreeItem> getFirstBorns(List<TreeItem> treeItems) {
+  /// Construir primogênitos
+  List<TreeItem> buildFirstBorns(List<TreeItem> treeItems) {
     try {
       List<TreeItem> firstBorns = <TreeItem>[];
+
       for (TreeItem treeItem in treeItems) {
-        TreeItem firstBorn = this.getFirstBorn(treeItem);
+        TreeItem firstBorn = this.buildFirstBorn(treeItem);
         firstBorns.add(firstBorn);
       }
 
       firstBorns = firstBorns.distinct().toList();
       return firstBorns;
     } on Exception catch (exception) {
-      throw Exception("Fail in getFirstBorns(): $exception");
+      throw Exception("Fail in buildFirstBorns(): $exception");
     }
   }
 
-  /// Obter primogênito
-  TreeItem getFirstBorn(TreeItem treeItem) {
+  /// Construir pai
+  TreeItem buildFirstBorn(TreeItem treeItem) {
     try {
       if (treeItem.parentId != null) {
         TreeItem parent = this
             .allTreeItems
             .firstWhereOrDefault((w) => w.id == treeItem.parentId)!;
-        return this.getFirstBorn(parent);
+
+        treeItem.parent = parent;
+        if (!parent.children.contains(treeItem)) {
+          parent.children.add(treeItem);
+        }
+
+        return this.buildFirstBorn(parent);
       }
 
       return treeItem;
     } on Exception catch (exception) {
-      throw Exception("Fail in getFirstBorn(): $exception");
-    }
-  }
-
-  /// Construir descendentes
-  Future<void> buildDescendants(
-    List<TreeItem> descendants,
-    TreeItem treeItem,
-  ) async {
-    try {
-      DateTime start = DateTime.now();
-
-      // Filhos do item vigente
-      List<TreeItem> children =
-          this.allTreeItems.where((w) => w.parentId == treeItem.id).toList();
-
-      DateTime end = DateTime.now();
-      print('Passo 4.1: ${end.difference(start).inSeconds} s');
-
-      print("children: ${children.length}");
-      for (TreeItem child in children) {
-        start = DateTime.now();
-        List<TreeItem> childDescendants = this.getDescendants(child);
-        end = DateTime.now();
-        print('Passo 4.2: ${end.difference(start).inSeconds} s');
-
-        start = DateTime.now();
-        bool isDescendant = childDescendants
-            .any((descendant) => descendants.contains(descendant));
-        end = DateTime.now();
-        print('Passo 4.3: ${end.difference(start).inSeconds} s');
-
-        if (!isDescendant) continue;
-
-        // Navegação
-        child.parent = treeItem;
-        treeItem.children.add(child);
-
-        this.buildDescendants(descendants, child);
-      }
-    } on Exception catch (exception) {
-      throw Exception("Fail in buildDescendants(): $exception");
-    }
-  }
-
-  /// Obter descendentes
-  List<TreeItem> getDescendants(TreeItem treeItem) {
-    try {
-      List<TreeItem> childs = <TreeItem>[];
-      childs.add(treeItem);
-
-      for (TreeItem child
-          in this.allTreeItems.where((w) => w.parentId == treeItem.id)) {
-        childs.addAll(this.getDescendants(child));
-      }
-
-      return childs;
-    } on Exception catch (exception) {
-      throw Exception("Fail in getDescendants(): $exception");
+      throw Exception("Fail in buildFirstBorn(): $exception");
     }
   }
 
@@ -156,15 +105,16 @@ class AssetsTree {
       this.allTreeItems.addAll(assetTreeItems);
 
       DateTime end = DateTime.now();
-      print('Passo 1: ${end.difference(start).inSeconds} s');
+      print(
+        "Passo 1: Criar itens Localizações/Recursos (${end.difference(start).inSeconds} s)",
+      );
 
       // #endregion
 
-      // #region 2. Itens filtrados
+      // #region 2. Filtrar itens
 
       start = DateTime.now();
 
-      // Tipo / Estado
       if (this.filters.isEmpty) {
         filteredTreeItems = this.allTreeItems;
       } else {
@@ -176,42 +126,32 @@ class AssetsTree {
           }
         }
       }
+
       end = DateTime.now();
-      print('Passo 2: ${end.difference(start).inSeconds} s');
+      print(
+        "Passo 2: Filtrar itens (${end.difference(start).inSeconds} s)",
+      );
 
       // #endregion
 
-      // #region 3. Obtém primogênitos
+      // #region 3. Constrói estrutura
 
       start = DateTime.now();
 
-      this.firstBorns = this.getFirstBorns(filteredTreeItems);
+      this.firstBorns = this.buildFirstBorns(filteredTreeItems);
+
       end = DateTime.now();
-      print('Passo 3: ${end.difference(start).inSeconds} s');
+      print(
+        "Passo 3: Constrói estrutura (${end.difference(start).inSeconds} s)",
+      );
 
       // #endregion
 
-      // #region 4. Constrói árvore a partir dos primogênitos
+      // #region 4. Dispose
 
-      for (TreeItem firstBorn in this.firstBorns) {
-        this.buildDescendants(filteredTreeItems, firstBorn);
-      }
+      this.allTreeItems.clear();
 
       // #endregion
-
-      // // #region 4. Constrói árvore
-
-      // start = DateTime.now();
-
-      // for (TreeItem firstBorn in firstBorns) {
-      //   this.buildDescendants(filteredTreeItems, firstBorn);
-
-      //   this.filteredTreeItems.add(firstBorn);
-      // }
-      // end = DateTime.now();
-      // print('Passo 4: ${end.difference(start).inSeconds} s');
-
-      // // #endregion
     } on Exception catch (exception) {
       throw Exception("Fail in build(): $exception");
     }

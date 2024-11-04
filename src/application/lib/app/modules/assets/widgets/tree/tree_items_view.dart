@@ -53,37 +53,31 @@ class _TreeItemsViewState extends State<TreeItemsView> {
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
       return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-          child: ListView.separated(
-            itemCount: this.controller.assetsTree.firstBorns.length,
-            separatorBuilder: (context, index) {
-              return const Padding(padding: EdgeInsets.only(bottom: 4));
-            },
-            itemBuilder: (context, index) {
-              TreeItem treeItem = this.controller.assetsTree.firstBorns[index];
-              return TreeItemView(
-                key: Key(treeItem.id),
-                treeItem: treeItem,
-              );
-            },
-          ));
-      return Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
         child: !this.controller.isLoading
-            ? ListView.separated(
-                itemCount: this.controller.assetsTree.firstBorns.length,
-                separatorBuilder: (context, index) {
-                  return const Padding(padding: EdgeInsets.only(bottom: 4));
-                },
-                itemBuilder: (context, index) {
-                  TreeItem treeItem =
-                      this.controller.assetsTree.firstBorns[index];
-                  return TreeItemView(
-                    key: Key(treeItem.id),
-                    treeItem: treeItem,
-                  );
-                },
-              )
+            ? this.controller.assetsTree.firstBorns.isEmpty
+                ? const Center(
+                    child: Text(
+                      "Não há itens para serem exibidos",
+                      style: TextStyle(
+                        color: Color(0xFF77818C),
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: this.controller.assetsTree.firstBorns.length,
+                    separatorBuilder: (context, index) {
+                      return const Padding(padding: EdgeInsets.only(bottom: 4));
+                    },
+                    itemBuilder: (context, index) {
+                      TreeItem treeItem =
+                          this.controller.assetsTree.firstBorns[index];
+                      return TreeItemView(
+                        key: Key(treeItem.id),
+                        treeItem: treeItem,
+                      );
+                    },
+                  )
             : const SkeletonLoaderView(),
       );
     });

@@ -44,11 +44,20 @@ class _AssetsViewState extends State<AssetsView> {
         automaticallyImplyLeading: true,
         flexibleSpace: SafeArea(
           child: Center(
-            child: Text(
-              "Assets / ${this.controller.assetsService.company.name!}",
-              style: const TextStyle(
-                color: Colors.white,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/images/company.png",
+                ),
+                const Padding(padding: EdgeInsets.only(right: 6)),
+                Text(
+                  "Assets / ${this.controller.assetsService.company.name!}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

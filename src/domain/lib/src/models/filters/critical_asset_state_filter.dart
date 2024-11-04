@@ -1,5 +1,4 @@
 import 'package:domain/domain.dart';
-import 'package:domain/src/models/tree/items/component_tree_item.dart';
 
 /// Filtro de estado para estado crítico
 class CriticalAssetStateFilter extends AssetFilter {

@@ -70,6 +70,8 @@ abstract class _AssetsStoreBase with Store {
     try {
       this.setIsLoading(true);
 
+      await Future.delayed(const Duration(seconds: 1));
+
       List<AssetFilter> filters = this.selectedCustomFilters.toList();
       if (this.textSearchFilter.textSearch.isNotEmpty) {
         filters.add(this.textSearchFilter);
@@ -80,9 +82,9 @@ abstract class _AssetsStoreBase with Store {
         assets: this.assets,
         filters: filters,
       );
-      assetsTree.build().then((value) {
-        this.setIsLoading(false);
-      });
+      await this.assetsTree.build();
+
+      this.setIsLoading(false);
     } catch (exception) {
       throw Exception('Fail in refresh(): $exception');
     }
