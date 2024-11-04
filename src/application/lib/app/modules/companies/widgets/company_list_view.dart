@@ -1,5 +1,5 @@
 import 'package:application/app/modules/companies/companies_store.dart';
-import 'package:application/app/widgets/widgets/skeleton_loader_view.dart';
+import 'package:application/app/widgets/skeleton_loader_view.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

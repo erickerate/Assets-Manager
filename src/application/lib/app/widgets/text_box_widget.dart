@@ -15,7 +15,10 @@ class TextBoxWidget extends StatefulWidget {
   final double? height;
   final String? hintText;
   final Widget? prefixIcon;
+
+  /// Duração do estrangulador (ms)
   final int debounceDuration;
+
   final Future<void> Function(String value)? onValueChanged;
 
   @override
@@ -23,7 +26,7 @@ class TextBoxWidget extends StatefulWidget {
 }
 
 class _TextBoxWidgetState extends State<TextBoxWidget> {
-// #region Members 'Debounce' :: throttling
+  // #region Members 'Debounce' :: throttling
 
   /// Estrangulador
   Future<void> throttling(String? text) async {
@@ -48,13 +51,16 @@ class _TextBoxWidgetState extends State<TextBoxWidget> {
 
   // #endregion
 
-  // #region Members 'Builds' ::
+  // #region Members 'Builds' :: build()
+
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: this.widget.height,
       child: TextFormField(
+        controller: this.controller,
         style: const TextStyle(
           color: Color(0XFF8E98A3),
           fontWeight: FontWeight.w400,
@@ -75,6 +81,22 @@ class _TextBoxWidgetState extends State<TextBoxWidget> {
             Icons.search,
             color: Color(0XFF8E98A3),
           ),
+          suffixIcon: this.controller.text.isEmpty
+              ? null
+              : IconButton(
+                  visualDensity: VisualDensity.compact,
+                  icon: const Icon(
+                    Icons.close,
+                    color: Color(0XFF8E98A3),
+                  ),
+                  onPressed: () {
+                    this.controller.clear();
+                    this.setState(() {});
+                    if (this.widget.onValueChanged != null) {
+                      this.widget.onValueChanged!("");
+                    }
+                  },
+                ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(4),
@@ -85,6 +107,7 @@ class _TextBoxWidgetState extends State<TextBoxWidget> {
           ),
         ),
         onChanged: (value) async {
+          this.setState(() {});
           await this.throttling(value);
         },
       ),

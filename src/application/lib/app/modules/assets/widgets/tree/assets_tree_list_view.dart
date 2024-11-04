@@ -1,6 +1,6 @@
 import 'package:application/app/modules/assets/assets_store.dart';
-import 'package:application/app/modules/assets/widgets/assets_tree_list_item_view.dart';
-import 'package:application/app/widgets/widgets/skeleton_loader_view.dart';
+import 'package:application/app/modules/assets/widgets/tree/assets_tree_list_item_view.dart';
+import 'package:application/app/widgets/skeleton_loader_view.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -39,7 +39,7 @@ class _TreeAssetsListViewState extends State<TreeAssetsListView> {
   /// Ao atualizar
   Future<void> onRefresh() async {
     try {
-      await this.controller.queryAssets();
+      await this.controller.onLoad();
     } catch (exception) {
       throw Exception("Fail in onRefreshing(): $exception");
     }

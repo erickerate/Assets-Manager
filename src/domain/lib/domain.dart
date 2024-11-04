@@ -14,5 +14,6 @@ export 'src/services/service.dart';
 export 'src/services/assets_service.dart';
 
 // Models
-export 'src/models/assets/assets_tree.dart';
-export 'src/models/assets/assets_tree_item.dart';
+export 'src/models/tree/assets_tree.dart';
+export 'src/models/tree/assets_tree_item.dart';
+export 'src/models/filters/assets_state_filter_enum.dart';

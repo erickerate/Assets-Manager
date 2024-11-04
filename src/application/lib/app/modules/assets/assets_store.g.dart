@@ -17,6 +17,26 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
               name: '_AssetsStoreBase.company'))
           .value;
 
+  late final _$assetsTreeAtom =
+      Atom(name: '_AssetsStoreBase.assetsTree', context: context);
+
+  @override
+  AssetsTree get assetsTree {
+    _$assetsTreeAtom.reportRead();
+    return super.assetsTree;
+  }
+
+  bool _assetsTreeIsInitialized = false;
+
+  @override
+  set assetsTree(AssetsTree value) {
+    _$assetsTreeAtom.reportWrite(
+        value, _assetsTreeIsInitialized ? super.assetsTree : null, () {
+      super.assetsTree = value;
+      _assetsTreeIsInitialized = true;
+    });
+  }
+
   late final _$assetsAtom =
       Atom(name: '_AssetsStoreBase.assets', context: context);
 
@@ -65,12 +85,36 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     });
   }
 
-  late final _$queryAssetsAsyncAction =
-      AsyncAction('_AssetsStoreBase.queryAssets', context: context);
+  late final _$selectedFiltersAtom =
+      Atom(name: '_AssetsStoreBase.selectedFilters', context: context);
 
   @override
-  Future<void> queryAssets() {
-    return _$queryAssetsAsyncAction.run(() => super.queryAssets());
+  List<AssetsStateFilter> get selectedFilters {
+    _$selectedFiltersAtom.reportRead();
+    return super.selectedFilters;
+  }
+
+  @override
+  set selectedFilters(List<AssetsStateFilter> value) {
+    _$selectedFiltersAtom.reportWrite(value, super.selectedFilters, () {
+      super.selectedFilters = value;
+    });
+  }
+
+  late final _$onLoadAsyncAction =
+      AsyncAction('_AssetsStoreBase.onLoad', context: context);
+
+  @override
+  Future<void> onLoad() {
+    return _$onLoadAsyncAction.run(() => super.onLoad());
+  }
+
+  late final _$refreshAsyncAction =
+      AsyncAction('_AssetsStoreBase.refresh', context: context);
+
+  @override
+  Future<void> refresh() {
+    return _$refreshAsyncAction.run(() => super.refresh());
   }
 
   late final _$setIsLoadingAsyncAction =
@@ -81,12 +125,22 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     return _$setIsLoadingAsyncAction.run(() => super.setIsLoading(isLoading));
   }
 
+  late final _$selectFilterAsyncAction =
+      AsyncAction('_AssetsStoreBase.selectFilter', context: context);
+
+  @override
+  Future<void> selectFilter(AssetsStateFilter filter) {
+    return _$selectFilterAsyncAction.run(() => super.selectFilter(filter));
+  }
+
   @override
   String toString() {
     return '''
+assetsTree: ${assetsTree},
 assets: ${assets},
 locations: ${locations},
 isLoading: ${isLoading},
+selectedFilters: ${selectedFilters},
 company: ${company}
     ''';
   }

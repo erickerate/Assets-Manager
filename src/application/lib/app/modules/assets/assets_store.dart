@@ -49,12 +49,26 @@ abstract class _AssetsStoreBase with Store {
 
   /// Buscar recursos
   @action
-  Future<void> queryAssets() async {
+  Future<void> onLoad() async {
     try {
       this.setIsLoading(true);
 
       this.assets = await this.assetsService.getAll();
       this.locations = await this.locationsService.getAll();
+
+      this.refresh();
+
+      this.setIsLoading(false);
+    } catch (exception) {
+      throw Exception('Fail in queryAssets(): $exception');
+    }
+  }
+
+  /// Atualizar
+  @action
+  Future<void> refresh() async {
+    try {
+      this.setIsLoading(true);
 
       this.assetsTree = AssetsTree(
         locations: this.locations,
@@ -89,6 +103,50 @@ abstract class _AssetsStoreBase with Store {
       this.isLoading = isLoading;
     } catch (exception) {
       throw Exception('Fail in setIsLoading(): $exception');
+    }
+  }
+
+  // #endregion
+
+  // #region Members 'Filters' :: allFilters, selectedFilters, selectFilter()
+
+  /// Todos filtros de estado
+  List<AssetsStateFilter> get allFilters {
+    if (this._filters == null) {
+      this._filters = <AssetsStateFilter>[];
+      this._filters!.add(AssetsStateFilter(
+            number: "energySensor",
+            description: "Sensor de energia",
+          ));
+      this._filters!.add(AssetsStateFilter(
+            number: "critical",
+            description: "Crítico",
+          ));
+    }
+
+    return this._filters!;
+  }
+
+  List<AssetsStateFilter>? _filters;
+
+  /// Filtros selecionados
+  @observable
+  List<AssetsStateFilter> selectedFilters = <AssetsStateFilter>[];
+
+  /// Selecionar filtro
+  @action
+  Future<void> selectFilter(AssetsStateFilter filter) async {
+    try {
+      List<AssetsStateFilter> selectedFilters = this.selectedFilters.toList();
+      if (selectedFilters.contains(filter)) {
+        selectedFilters.remove(filter);
+      } else {
+        selectedFilters.add(filter);
+      }
+
+      this.selectedFilters = selectedFilters;
+    } catch (exception) {
+      throw Exception('Fail in selectFilter(): $exception');
     }
   }
 

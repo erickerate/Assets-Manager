@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:domain/domain.dart';
-import 'package:domain/src/models/assets/assets_tree.dart';
-import 'package:domain/src/models/assets/assets_tree_item.dart';
+import 'package:domain/src/models/tree/assets_tree.dart';
+import 'package:domain/src/models/tree/assets_tree_item.dart';
 import 'package:test/test.dart';
 
 void main() {

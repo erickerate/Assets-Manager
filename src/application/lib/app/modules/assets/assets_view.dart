@@ -1,5 +1,6 @@
 import 'package:application/app/modules/assets/assets_store.dart';
-import 'package:application/app/modules/assets/widgets/assets_tree_list_view.dart';
+import 'package:application/app/modules/assets/widgets/filters/assets_state_filters_widget.dart';
+import 'package:application/app/modules/assets/widgets/tree/assets_tree_list_view.dart';
 import 'package:application/app/widgets/text_box_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -45,7 +46,7 @@ class _AssetsViewState extends State<AssetsView> {
           child: Center(
             child: Text(
               "Assets / ${this.controller.assetsService.company.name!}",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
               ),
             ),
@@ -65,7 +66,6 @@ class _AssetsViewState extends State<AssetsView> {
 
             Container(
               width: double.infinity,
-              height: 104,
               decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(width: 1, color: Color(0xFFEAEEF2)),
@@ -78,9 +78,11 @@ class _AssetsViewState extends State<AssetsView> {
                     TextBoxWidget(
                       height: 32,
                       hintText: "Buscar Ativo ou Local",
-                      onValueChanged: (value) async {},
+                      onValueChanged: (value) async {
+                      },
                     ),
-                    const Text("Filtro de estado"),
+                    const Padding(padding: EdgeInsets.only(bottom: 8)),
+                    const AssetsStateFiltersWidget(),
                   ],
                 ),
               ),
