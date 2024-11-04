@@ -22,8 +22,8 @@ class _AssetStateFiltersWidgetState extends State<AssetStateFiltersWidget> {
   /// Ao selecionar
   Future<void> onSelect(AssetFilter filter) async {
     try {
-      await this.controller.selectFilter(filter);
-      await this.controller.refresh();
+      await this.controller.selectCustomFilter(filter);
+      this.controller.refresh();
     } on Exception catch (exception) {
       throw Exception("Fail in onSelect(): $exception");
     }
@@ -43,10 +43,10 @@ class _AssetStateFiltersWidgetState extends State<AssetStateFiltersWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           children: List.generate(
-            this.controller.allFilters.length,
+            this.controller.customFilters.length,
             (index) {
               bool isFirst = index == 0;
-              AssetFilter filter = this.controller.allFilters[index];
+              AssetFilter filter = this.controller.customFilters[index];
               IconData iconData = filter.number == "critical"
                   ? Icons.error_outline
                   : Icons.bolt_outlined;
@@ -58,7 +58,7 @@ class _AssetStateFiltersWidgetState extends State<AssetStateFiltersWidget> {
                       stateFilterEnum: filter,
                       icon: iconData,
                       isSelected:
-                          this.controller.selectedFilters.contains(filter),
+                          this.controller.selectedCustomFilters.contains(filter),
                       onSelect: this.onSelect,
                     ),
                   );

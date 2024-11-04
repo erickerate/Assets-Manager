@@ -28,11 +28,11 @@ void main() {
         assets: assets,
         filters: [],
       );
-      assetsTree.buildTree();
+      assetsTree.build();
 
-      printTree(assetsTree.filteredTreeItems);
+      printTree(assetsTree.firstBorns);
 
-      expect(assetsTree.filteredTreeItems, isA<List<TreeItem>>());
+      expect(assetsTree.firstBorns, isA<List<TreeItem>>());
     });
   });
 }

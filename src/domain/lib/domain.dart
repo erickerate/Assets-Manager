@@ -20,3 +20,4 @@ export 'src/models/tree/items/component_tree_item.dart';
 export 'src/models/filters/asset_filter.dart';
 export 'src/models/filters/energy_sensor_type_filter.dart';
 export 'src/models/filters/critical_asset_state_filter.dart';
+export 'src/models/filters/text_search_filter.dart';

@@ -56,7 +56,7 @@ abstract class _AssetsStoreBase with Store {
       this.assets = await this.assetsService.getAll();
       this.locations = await this.locationsService.getAll();
 
-      this.refresh();
+      await this.refresh();
 
       this.setIsLoading(false);
     } catch (exception) {
@@ -70,13 +70,19 @@ abstract class _AssetsStoreBase with Store {
     try {
       this.setIsLoading(true);
 
+      List<AssetFilter> filters = this.selectedCustomFilters.toList();
+      if (this.textSearchFilter.textSearch.isNotEmpty) {
+        filters.add(this.textSearchFilter);
+      }
+
       this.assetsTree = AssetsTree(
         locations: this.locations,
         assets: this.assets,
-        filters: this.selectedFilters,
+        filters: filters,
       );
-
-      this.setIsLoading(false);
+      assetsTree.build().then((value) {
+        this.setIsLoading(false);
+      });
     } catch (exception) {
       throw Exception('Fail in refresh(): $exception');
     }
@@ -109,10 +115,10 @@ abstract class _AssetsStoreBase with Store {
 
   // #endregion
 
-  // #region Members 'Filters' :: allFilters, selectedFilters, hasFilters, selectFilter()
+  // #region Members 'Custom Filters' :: customFilters, selectedCustomFilters, selectCustomFilter(), hasFilters
 
-  /// Todos filtros de estado
-  List<AssetFilter> get allFilters {
+  /// Filtros customizados
+  List<AssetFilter> get customFilters {
     if (this._filters == null) {
       this._filters = <AssetFilter>[];
       this._filters!.add(EnergySensorTypeFilter());
@@ -126,27 +132,46 @@ abstract class _AssetsStoreBase with Store {
 
   /// Filtros selecionados
   @observable
-  List<AssetFilter> selectedFilters = <AssetFilter>[];
-
-  /// Possui filtros selecionados?
-  @observable
-  bool hasFilters = false;
+  List<AssetFilter> selectedCustomFilters = <AssetFilter>[];
 
   /// Selecionar filtro
   @action
-  Future<void> selectFilter(AssetFilter filter) async {
+  Future<void> selectCustomFilter(AssetFilter filter) async {
     try {
-      List<AssetFilter> selectedFilters = this.selectedFilters.toList();
+      List<AssetFilter> selectedFilters = this.selectedCustomFilters.toList();
       if (selectedFilters.contains(filter)) {
         selectedFilters.remove(filter);
       } else {
         selectedFilters.add(filter);
       }
 
-      this.selectedFilters = selectedFilters.toList();
-      this.hasFilters = this.selectedFilters.isNotEmpty;
+      this.selectedCustomFilters = selectedFilters.toList();
     } catch (exception) {
-      throw Exception('Fail in selectFilter(): $exception');
+      throw Exception('Fail in selectCustomFilter(): $exception');
+    }
+  }
+
+  /// Possui filtros selecionados?
+  @computed
+  bool get hasFilters =>
+      this.selectedCustomFilters.isNotEmpty || this.textSearchFilter.hasFilter;
+
+  // #endregion
+
+  // #region Members 'Text Filter' :: textSearchFilter, onTextSearchFilterChanged()
+
+  /// Filtro de texto
+  @observable
+  TextSearchFilter textSearchFilter = TextSearchFilter();
+
+  /// Ao buscar pelo filtro de texto
+  @action
+  Future<void> onTextSearchFilterChanged(String value) async {
+    try {
+      this.textSearchFilter = TextSearchFilter(textSearch: value);
+      this.refresh();
+    } catch (exception) {
+      throw Exception('Fail in onTextSearchFilterChanged(): $exception');
     }
   }
 

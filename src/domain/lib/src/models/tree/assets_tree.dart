@@ -10,9 +10,7 @@ class AssetsTree {
     required this.locations,
     required this.assets,
     required this.filters,
-  }) {
-    this.buildTree();
-  }
+  });
 
   // #endregion
 
@@ -68,20 +66,32 @@ class AssetsTree {
   }
 
   /// Construir descendentes
-  void buildDescendants(
+  Future<void> buildDescendants(
     List<TreeItem> descendants,
     TreeItem treeItem,
-  ) {
+  ) async {
     try {
+      DateTime start = DateTime.now();
+
       // Filhos do item vigente
       List<TreeItem> children =
           this.allTreeItems.where((w) => w.parentId == treeItem.id).toList();
 
-      for (TreeItem child in children) {
-        List<TreeItem> childDescendants = this.getDescendants(child);
+      DateTime end = DateTime.now();
+      print('Passo 4.1: ${end.difference(start).inSeconds} s');
 
+      print("children: ${children.length}");
+      for (TreeItem child in children) {
+        start = DateTime.now();
+        List<TreeItem> childDescendants = this.getDescendants(child);
+        end = DateTime.now();
+        print('Passo 4.2: ${end.difference(start).inSeconds} s');
+
+        start = DateTime.now();
         bool isDescendant = childDescendants
             .any((descendant) => descendants.contains(descendant));
+        end = DateTime.now();
+        print('Passo 4.3: ${end.difference(start).inSeconds} s');
 
         if (!isDescendant) continue;
 
@@ -92,7 +102,7 @@ class AssetsTree {
         this.buildDescendants(descendants, child);
       }
     } on Exception catch (exception) {
-      throw Exception("Fail in addDescendants(): $exception");
+      throw Exception("Fail in buildDescendants(): $exception");
     }
   }
 
@@ -115,21 +125,24 @@ class AssetsTree {
 
   // #endregion
 
-  // #region Members 'Tree' :: treeItems, buildTree()
+  // #region Members 'Tree' :: firstBorns, allTreeItems, build()
 
-  /// Itens filtrados
-  List<TreeItem> filteredTreeItems = <TreeItem>[];
+  /// Itens primogênitos
+  List<TreeItem> firstBorns = <TreeItem>[];
 
   /// Todos itens
   List<TreeItem> allTreeItems = <TreeItem>[];
 
   /// Construir árvore
-  void buildTree() {
+  Future<void> build() async {
     try {
       // #region 1. Cria itens Localizações / Recursos
 
-      this.filteredTreeItems.clear();
+      DateTime start = DateTime.now();
+
+      this.firstBorns.clear();
       this.allTreeItems.clear();
+
       List<TreeItem> filteredTreeItems = <TreeItem>[];
 
       List<TreeItem> locationTreeItems = this
@@ -142,9 +155,14 @@ class AssetsTree {
           this.assets.map((asset) => TreeItem.fromAsset(asset)).toList();
       this.allTreeItems.addAll(assetTreeItems);
 
+      DateTime end = DateTime.now();
+      print('Passo 1: ${end.difference(start).inSeconds} s');
+
       // #endregion
 
       // #region 2. Itens filtrados
+
+      start = DateTime.now();
 
       // Tipo / Estado
       if (this.filters.isEmpty) {
@@ -152,32 +170,50 @@ class AssetsTree {
       } else {
         for (TreeItem treeItem in this.allTreeItems) {
           bool meetsAnyFilter =
-              this.filters.any((filter) => filter.meets(treeItem));
+              this.filters.all((filter) => filter.meets(treeItem));
           if (meetsAnyFilter) {
             filteredTreeItems.add(treeItem);
           }
         }
       }
+      end = DateTime.now();
+      print('Passo 2: ${end.difference(start).inSeconds} s');
 
       // #endregion
 
       // #region 3. Obtém primogênitos
 
-      List<TreeItem> firstBorns = this.getFirstBorns(filteredTreeItems);
+      start = DateTime.now();
+
+      this.firstBorns = this.getFirstBorns(filteredTreeItems);
+      end = DateTime.now();
+      print('Passo 3: ${end.difference(start).inSeconds} s');
 
       // #endregion
 
-      // #region 4. Constrói árvore
+      // #region 4. Constrói árvore a partir dos primogênitos
 
-      for (TreeItem firstBorn in firstBorns) {
+      for (TreeItem firstBorn in this.firstBorns) {
         this.buildDescendants(filteredTreeItems, firstBorn);
-
-        this.filteredTreeItems.add(firstBorn);
       }
 
       // #endregion
+
+      // // #region 4. Constrói árvore
+
+      // start = DateTime.now();
+
+      // for (TreeItem firstBorn in firstBorns) {
+      //   this.buildDescendants(filteredTreeItems, firstBorn);
+
+      //   this.filteredTreeItems.add(firstBorn);
+      // }
+      // end = DateTime.now();
+      // print('Passo 4: ${end.difference(start).inSeconds} s');
+
+      // // #endregion
     } on Exception catch (exception) {
-      throw Exception("Fail in buildTree(): $exception");
+      throw Exception("Fail in build(): $exception");
     }
   }
 

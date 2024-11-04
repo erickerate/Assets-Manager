@@ -16,6 +16,13 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
       (_$companyComputed ??= Computed<Company>(() => super.company,
               name: '_AssetsStoreBase.company'))
           .value;
+  Computed<bool>? _$hasFiltersComputed;
+
+  @override
+  bool get hasFilters =>
+      (_$hasFiltersComputed ??= Computed<bool>(() => super.hasFilters,
+              name: '_AssetsStoreBase.hasFilters'))
+          .value;
 
   late final _$assetsTreeAtom =
       Atom(name: '_AssetsStoreBase.assetsTree', context: context);
@@ -85,35 +92,36 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     });
   }
 
-  late final _$selectedFiltersAtom =
-      Atom(name: '_AssetsStoreBase.selectedFilters', context: context);
+  late final _$selectedCustomFiltersAtom =
+      Atom(name: '_AssetsStoreBase.selectedCustomFilters', context: context);
 
   @override
-  List<AssetFilter> get selectedFilters {
-    _$selectedFiltersAtom.reportRead();
-    return super.selectedFilters;
+  List<AssetFilter> get selectedCustomFilters {
+    _$selectedCustomFiltersAtom.reportRead();
+    return super.selectedCustomFilters;
   }
 
   @override
-  set selectedFilters(List<AssetFilter> value) {
-    _$selectedFiltersAtom.reportWrite(value, super.selectedFilters, () {
-      super.selectedFilters = value;
+  set selectedCustomFilters(List<AssetFilter> value) {
+    _$selectedCustomFiltersAtom.reportWrite(value, super.selectedCustomFilters,
+        () {
+      super.selectedCustomFilters = value;
     });
   }
 
-  late final _$hasFiltersAtom =
-      Atom(name: '_AssetsStoreBase.hasFilters', context: context);
+  late final _$textSearchFilterAtom =
+      Atom(name: '_AssetsStoreBase.textSearchFilter', context: context);
 
   @override
-  bool get hasFilters {
-    _$hasFiltersAtom.reportRead();
-    return super.hasFilters;
+  TextSearchFilter get textSearchFilter {
+    _$textSearchFilterAtom.reportRead();
+    return super.textSearchFilter;
   }
 
   @override
-  set hasFilters(bool value) {
-    _$hasFiltersAtom.reportWrite(value, super.hasFilters, () {
-      super.hasFilters = value;
+  set textSearchFilter(TextSearchFilter value) {
+    _$textSearchFilterAtom.reportWrite(value, super.textSearchFilter, () {
+      super.textSearchFilter = value;
     });
   }
 
@@ -141,12 +149,23 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     return _$setIsLoadingAsyncAction.run(() => super.setIsLoading(isLoading));
   }
 
-  late final _$selectFilterAsyncAction =
-      AsyncAction('_AssetsStoreBase.selectFilter', context: context);
+  late final _$selectCustomFilterAsyncAction =
+      AsyncAction('_AssetsStoreBase.selectCustomFilter', context: context);
 
   @override
-  Future<void> selectFilter(AssetFilter filter) {
-    return _$selectFilterAsyncAction.run(() => super.selectFilter(filter));
+  Future<void> selectCustomFilter(AssetFilter filter) {
+    return _$selectCustomFilterAsyncAction
+        .run(() => super.selectCustomFilter(filter));
+  }
+
+  late final _$onTextSearchFilterChangedAsyncAction = AsyncAction(
+      '_AssetsStoreBase.onTextSearchFilterChanged',
+      context: context);
+
+  @override
+  Future<void> onTextSearchFilterChanged(String value) {
+    return _$onTextSearchFilterChangedAsyncAction
+        .run(() => super.onTextSearchFilterChanged(value));
   }
 
   @override
@@ -156,9 +175,10 @@ assetsTree: ${assetsTree},
 assets: ${assets},
 locations: ${locations},
 isLoading: ${isLoading},
-selectedFilters: ${selectedFilters},
-hasFilters: ${hasFilters},
-company: ${company}
+selectedCustomFilters: ${selectedCustomFilters},
+textSearchFilter: ${textSearchFilter},
+company: ${company},
+hasFilters: ${hasFilters}
     ''';
   }
 }

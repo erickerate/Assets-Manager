@@ -38,7 +38,7 @@ class _TextBoxWidgetState extends State<TextBoxWidget> {
       this.throttleTimer =
           Timer(Duration(milliseconds: this.widget.debounceDuration), () async {
         if (this.widget.onValueChanged != null) {
-          await this.widget.onValueChanged!(text ?? "");
+          this.widget.onValueChanged!(text ?? "");
         }
       });
     } catch (exception) {
@@ -108,7 +108,7 @@ class _TextBoxWidgetState extends State<TextBoxWidget> {
         ),
         onChanged: (value) async {
           this.setState(() {});
-          await this.throttling(value);
+          this.throttling(value);
         },
       ),
     );

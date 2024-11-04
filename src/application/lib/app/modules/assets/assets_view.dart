@@ -78,8 +78,7 @@ class _AssetsViewState extends State<AssetsView> {
                     TextBoxWidget(
                       height: 32,
                       hintText: "Buscar Ativo ou Local",
-                      onValueChanged: (value) async {
-                      },
+                      onValueChanged: this.controller.onTextSearchFilterChanged,
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 8)),
                     const AssetStateFiltersWidget(),
