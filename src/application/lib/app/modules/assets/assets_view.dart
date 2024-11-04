@@ -1,5 +1,6 @@
 import 'package:application/app/modules/assets/assets_store.dart';
 import 'package:application/app/modules/assets/widgets/assets_tree_list_view.dart';
+import 'package:application/app/widgets/text_box_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -60,6 +61,8 @@ class _AssetsViewState extends State<AssetsView> {
       body: SafeArea(
         child: Column(
           children: [
+            // #region Filtros
+
             Container(
               width: double.infinity,
               height: 104,
@@ -70,17 +73,28 @@ class _AssetsViewState extends State<AssetsView> {
               ),
               child: Container(
                 padding: const EdgeInsets.all(16),
-                child: const Column(
+                child: Column(
                   children: [
-                    Text("Filtro de texto"),
-                    Text("Filtro de estado"),
+                    TextBoxWidget(
+                      height: 32,
+                      hintText: "Buscar Ativo ou Local",
+                      onValueChanged: (value) async {},
+                    ),
+                    const Text("Filtro de estado"),
                   ],
                 ),
               ),
             ),
+
+            // #endregion
+
+            // #region Árvore
+
             const Flexible(
               child: TreeAssetsListView(),
             ),
+
+            // #endregion
           ],
         ),
       ),

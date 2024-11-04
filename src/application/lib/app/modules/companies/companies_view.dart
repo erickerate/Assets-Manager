@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'widgets/company_list_view.dart';
+import '../../widgets/widgets/company_list_view.dart';
 
 class CompaniesView extends StatefulWidget {
   const CompaniesView({super.key});

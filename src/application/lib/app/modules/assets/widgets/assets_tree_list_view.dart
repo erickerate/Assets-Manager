@@ -1,6 +1,6 @@
 import 'package:application/app/modules/assets/assets_store.dart';
 import 'package:application/app/modules/assets/widgets/assets_tree_list_item_view.dart';
-import 'package:application/app/modules/companies/widgets/company_list_view_skeleton_loader.dart';
+import 'package:application/app/widgets/widgets/skeleton_loader_view.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -68,7 +68,7 @@ class _TreeAssetsListViewState extends State<TreeAssetsListView> {
                   );
                 },
               )
-            : const CompanyListViewSkeletonLoader(),
+            : const SkeletonLoaderView(),
       );
     });
   }

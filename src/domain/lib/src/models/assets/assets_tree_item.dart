@@ -83,7 +83,8 @@ class AssetsTreeItem {
           ? "component"
           : "asset",
       description: asset.name!,
-      stateIconKey: asset.status,
+      stateIconKey:
+          asset.status ?? (asset.sensorId != null ? "energy_sensor" : null),
     );
   }
 

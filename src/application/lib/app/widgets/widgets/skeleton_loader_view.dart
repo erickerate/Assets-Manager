@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:skeleton_loader/skeleton_loader.dart';
 
-class CompanyListViewSkeletonLoader extends StatefulWidget {
+class SkeletonLoaderView extends StatefulWidget {
   // #region Constructor
 
-  const CompanyListViewSkeletonLoader({super.key});
+  const SkeletonLoaderView({super.key});
 
   // #endregion
 
   @override
-  State<CompanyListViewSkeletonLoader> createState() =>
-      _CompanyListViewSkeletonLoaderState();
+  State<SkeletonLoaderView> createState() => _SkeletonLoaderViewState();
 }
 
-class _CompanyListViewSkeletonLoaderState
-    extends State<CompanyListViewSkeletonLoader> {
+class _SkeletonLoaderViewState extends State<SkeletonLoaderView> {
   // #region Members 'Build' :: build()
 
   @override
