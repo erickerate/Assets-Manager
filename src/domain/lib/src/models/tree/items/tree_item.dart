@@ -1,21 +1,21 @@
 import 'package:domain/domain.dart';
+import 'package:domain/src/models/tree/items/component_tree_item.dart';
 
-/// Item da árvore de ativos
-class AssetsTreeItem {
+/// Item da árvore
+class TreeItem {
   // #region Constructors
 
   /// Item da árvore
-  AssetsTreeItem({
+  TreeItem({
     required this.id,
     required this.parentId,
-    required this.type,
     required this.description,
-    this.stateIconKey,
+    required this.type,
   });
 
   // #endregion
 
-  // #region Members 'Header' :: id, parentId, description, type, iconKey, level
+  // #region Members 'Header' :: id, parentId, description, type, level
 
   /// Identificador
   final String id;
@@ -29,9 +29,6 @@ class AssetsTreeItem {
   /// Tipo
   final String type;
 
-  /// Chave de ícone
-  final String? stateIconKey;
-
   /// Nível
   int get level {
     if (this.parent != null) {
@@ -41,22 +38,27 @@ class AssetsTreeItem {
     return 1;
   }
 
+  @override
+  String toString(){
+    return "${this.level} - ${this.description}";
+  }
+
   // #endregion
 
   // #region Members 'Navigations' :: parent
 
   /// Pai
-  AssetsTreeItem? parent;
+  TreeItem? parent;
 
   // #endregion
 
   // #region Members 'Children' :: children, addChild()
 
   /// Filhos
-  List<AssetsTreeItem> children = <AssetsTreeItem>[];
+  List<TreeItem> children = <TreeItem>[];
 
   /// Adicionar filho
-  void addChild(AssetsTreeItem item) {
+  void addChild(TreeItem item) {
     this.children.add(item);
   }
 
@@ -65,8 +67,8 @@ class AssetsTreeItem {
   // #region Members 'Create' :: fromLocation(), fromAsset()
 
   /// Criar item a partir da localização
-  static AssetsTreeItem fromLocation(Location location) {
-    return AssetsTreeItem(
+  static TreeItem fromLocation(Location location) {
+    return TreeItem(
       id: location.id!,
       parentId: location.parentId,
       type: "location",
@@ -75,16 +77,25 @@ class AssetsTreeItem {
   }
 
   /// Criar item a partir do recurso
-  static AssetsTreeItem fromAsset(Asset asset) {
-    return AssetsTreeItem(
+  static TreeItem fromAsset(Asset asset) {
+    // Componente
+    bool isComponent = asset.sensorId != null;
+    if (isComponent) {
+      return ComponentTreeItem(
+        id: asset.id!,
+        parentId: asset.parentId ?? asset.locationId,
+        description: asset.name!,
+        sensorType: asset.sensorType,
+        status: asset.status,
+      );
+    }
+
+    // Ativo
+    return TreeItem(
       id: asset.id!,
       parentId: asset.parentId ?? asset.locationId,
-      type: asset.sensorId != null && asset.sensorType != null
-          ? "component"
-          : "asset",
+      type: "asset",
       description: asset.name!,
-      stateIconKey:
-          asset.status ?? (asset.sensorId != null ? "energy_sensor" : null),
     );
   }
 

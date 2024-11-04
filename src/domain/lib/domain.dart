@@ -15,5 +15,8 @@ export 'src/services/assets_service.dart';
 
 // Models
 export 'src/models/tree/assets_tree.dart';
-export 'src/models/tree/assets_tree_item.dart';
-export 'src/models/filters/assets_state_filter_enum.dart';
+export 'src/models/tree/items/tree_item.dart';
+export 'src/models/tree/items/component_tree_item.dart';
+export 'src/models/filters/asset_filter.dart';
+export 'src/models/filters/energy_sensor_type_filter.dart';
+export 'src/models/filters/critical_asset_state_filter.dart';

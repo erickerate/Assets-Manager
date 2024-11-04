@@ -89,15 +89,31 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
       Atom(name: '_AssetsStoreBase.selectedFilters', context: context);
 
   @override
-  List<AssetsStateFilter> get selectedFilters {
+  List<AssetFilter> get selectedFilters {
     _$selectedFiltersAtom.reportRead();
     return super.selectedFilters;
   }
 
   @override
-  set selectedFilters(List<AssetsStateFilter> value) {
+  set selectedFilters(List<AssetFilter> value) {
     _$selectedFiltersAtom.reportWrite(value, super.selectedFilters, () {
       super.selectedFilters = value;
+    });
+  }
+
+  late final _$hasFiltersAtom =
+      Atom(name: '_AssetsStoreBase.hasFilters', context: context);
+
+  @override
+  bool get hasFilters {
+    _$hasFiltersAtom.reportRead();
+    return super.hasFilters;
+  }
+
+  @override
+  set hasFilters(bool value) {
+    _$hasFiltersAtom.reportWrite(value, super.hasFilters, () {
+      super.hasFilters = value;
     });
   }
 
@@ -129,7 +145,7 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
       AsyncAction('_AssetsStoreBase.selectFilter', context: context);
 
   @override
-  Future<void> selectFilter(AssetsStateFilter filter) {
+  Future<void> selectFilter(AssetFilter filter) {
     return _$selectFilterAsyncAction.run(() => super.selectFilter(filter));
   }
 
@@ -141,6 +157,7 @@ assets: ${assets},
 locations: ${locations},
 isLoading: ${isLoading},
 selectedFilters: ${selectedFilters},
+hasFilters: ${hasFilters},
 company: ${company}
     ''';
   }

@@ -41,13 +41,13 @@ abstract class _AssetsStoreBase with Store {
 
   // #endregion
 
-  // #region Members 'Assets' :: assets, queryAssets()
+  // #region Members 'Assets' :: assets, onLoad(), refresh
 
   /// Empresas
   @observable
   List<Asset> assets = <Asset>[];
 
-  /// Buscar recursos
+  /// Ao carregar
   @action
   Future<void> onLoad() async {
     try {
@@ -60,7 +60,7 @@ abstract class _AssetsStoreBase with Store {
 
       this.setIsLoading(false);
     } catch (exception) {
-      throw Exception('Fail in queryAssets(): $exception');
+      throw Exception('Fail in onLoad(): $exception');
     }
   }
 
@@ -73,11 +73,12 @@ abstract class _AssetsStoreBase with Store {
       this.assetsTree = AssetsTree(
         locations: this.locations,
         assets: this.assets,
+        filters: this.selectedFilters,
       );
 
       this.setIsLoading(false);
     } catch (exception) {
-      throw Exception('Fail in queryAssets(): $exception');
+      throw Exception('Fail in refresh(): $exception');
     }
   }
 
@@ -108,43 +109,42 @@ abstract class _AssetsStoreBase with Store {
 
   // #endregion
 
-  // #region Members 'Filters' :: allFilters, selectedFilters, selectFilter()
+  // #region Members 'Filters' :: allFilters, selectedFilters, hasFilters, selectFilter()
 
   /// Todos filtros de estado
-  List<AssetsStateFilter> get allFilters {
+  List<AssetFilter> get allFilters {
     if (this._filters == null) {
-      this._filters = <AssetsStateFilter>[];
-      this._filters!.add(AssetsStateFilter(
-            number: "energySensor",
-            description: "Sensor de energia",
-          ));
-      this._filters!.add(AssetsStateFilter(
-            number: "critical",
-            description: "Crítico",
-          ));
+      this._filters = <AssetFilter>[];
+      this._filters!.add(EnergySensorTypeFilter());
+      this._filters!.add(CriticalAssetStateFilter());
     }
 
     return this._filters!;
   }
 
-  List<AssetsStateFilter>? _filters;
+  List<AssetFilter>? _filters;
 
   /// Filtros selecionados
   @observable
-  List<AssetsStateFilter> selectedFilters = <AssetsStateFilter>[];
+  List<AssetFilter> selectedFilters = <AssetFilter>[];
+
+  /// Possui filtros selecionados?
+  @observable
+  bool hasFilters = false;
 
   /// Selecionar filtro
   @action
-  Future<void> selectFilter(AssetsStateFilter filter) async {
+  Future<void> selectFilter(AssetFilter filter) async {
     try {
-      List<AssetsStateFilter> selectedFilters = this.selectedFilters.toList();
+      List<AssetFilter> selectedFilters = this.selectedFilters.toList();
       if (selectedFilters.contains(filter)) {
         selectedFilters.remove(filter);
       } else {
         selectedFilters.add(filter);
       }
 
-      this.selectedFilters = selectedFilters;
+      this.selectedFilters = selectedFilters.toList();
+      this.hasFilters = this.selectedFilters.isNotEmpty;
     } catch (exception) {
       throw Exception('Fail in selectFilter(): $exception');
     }

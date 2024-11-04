@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
-class AssetsStateFilterWidget extends StatefulWidget {
-  const AssetsStateFilterWidget({
+class AssetStateFilterWidget extends StatefulWidget {
+  const AssetStateFilterWidget({
     super.key,
     required this.stateFilterEnum,
     required this.isSelected,
@@ -14,13 +14,13 @@ class AssetsStateFilterWidget extends StatefulWidget {
   });
 
   /// Filtro de estado
-  final AssetsStateFilter stateFilterEnum;
+  final AssetFilter stateFilterEnum;
 
   /// Está selecionado?
   final bool isSelected;
 
   /// Ao selecionar
-  final Future<void> Function(AssetsStateFilter fiter) onSelect;
+  final Future<void> Function(AssetFilter fiter) onSelect;
 
   /// Duração do estrangulador (ms)
   final int debounceDuration;
@@ -29,11 +29,11 @@ class AssetsStateFilterWidget extends StatefulWidget {
   final IconData icon;
 
   @override
-  State<AssetsStateFilterWidget> createState() =>
-      _AssetsStateFilterWidgetState();
+  State<AssetStateFilterWidget> createState() =>
+      _AssetStateFilterWidgetState();
 }
 
-class _AssetsStateFilterWidgetState extends State<AssetsStateFilterWidget> {
+class _AssetStateFilterWidgetState extends State<AssetStateFilterWidget> {
   // #region Members 'Debounce' :: throttling
 
   /// Estrangulador

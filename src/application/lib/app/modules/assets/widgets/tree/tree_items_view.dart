@@ -1,5 +1,5 @@
 import 'package:application/app/modules/assets/assets_store.dart';
-import 'package:application/app/modules/assets/widgets/tree/assets_tree_list_item_view.dart';
+import 'package:application/app/modules/assets/widgets/tree/tree_item_view.dart';
 import 'package:application/app/widgets/skeleton_loader_view.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +7,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 /// Componente de visualização para árvore de ativos
-class TreeAssetsListView extends StatefulWidget {
-  const TreeAssetsListView({super.key});
+class TreeItemsView extends StatefulWidget {
+  const TreeItemsView({super.key});
 
   @override
-  State<TreeAssetsListView> createState() => _TreeAssetsListViewState();
+  State<TreeItemsView> createState() => _TreeItemsViewState();
 }
 
-class _TreeAssetsListViewState extends State<TreeAssetsListView> {
+class _TreeItemsViewState extends State<TreeItemsView> {
   // #region Members 'Overrides' :: initState()
 
   @override
@@ -56,15 +56,16 @@ class _TreeAssetsListViewState extends State<TreeAssetsListView> {
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
         child: !this.controller.isLoading
             ? ListView.separated(
-                itemCount: this.controller.assetsTree.treeItems.length,
+                itemCount: this.controller.assetsTree.filteredTreeItems.length,
                 separatorBuilder: (context, index) {
                   return const Padding(padding: EdgeInsets.only(bottom: 4));
                 },
                 itemBuilder: (context, index) {
-                  AssetsTreeItem asset =
-                      this.controller.assetsTree.treeItems[index];
-                  return AssetsTreeListItemView(
-                    treeItem: asset,
+                  TreeItem treeItem =
+                      this.controller.assetsTree.filteredTreeItems[index];
+                  return TreeItemView(
+                    key: Key(treeItem.id),
+                    treeItem: treeItem,
                   );
                 },
               )

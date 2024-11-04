@@ -1,6 +1,6 @@
 import 'package:application/app/modules/assets/assets_store.dart';
-import 'package:application/app/modules/assets/widgets/filters/assets_state_filters_widget.dart';
-import 'package:application/app/modules/assets/widgets/tree/assets_tree_list_view.dart';
+import 'package:application/app/modules/assets/widgets/filters/asset_state_filters_widget.dart';
+import 'package:application/app/modules/assets/widgets/tree/tree_items_view.dart';
 import 'package:application/app/widgets/text_box_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -82,7 +82,7 @@ class _AssetsViewState extends State<AssetsView> {
                       },
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 8)),
-                    const AssetsStateFiltersWidget(),
+                    const AssetStateFiltersWidget(),
                   ],
                 ),
               ),
@@ -93,7 +93,7 @@ class _AssetsViewState extends State<AssetsView> {
             // #region Árvore
 
             const Flexible(
-              child: TreeAssetsListView(),
+              child: TreeItemsView(),
             ),
 
             // #endregion
