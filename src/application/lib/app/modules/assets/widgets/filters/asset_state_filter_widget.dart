@@ -29,8 +29,7 @@ class AssetStateFilterWidget extends StatefulWidget {
   final IconData icon;
 
   @override
-  State<AssetStateFilterWidget> createState() =>
-      _AssetStateFilterWidgetState();
+  State<AssetStateFilterWidget> createState() => _AssetStateFilterWidgetState();
 }
 
 class _AssetStateFilterWidgetState extends State<AssetStateFilterWidget> {
@@ -93,11 +92,12 @@ class _AssetStateFilterWidgetState extends State<AssetStateFilterWidget> {
               this.widget.stateFilterEnum.description,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: this.widget.isSelected
-                      ? Colors.white
-                      : const Color(0xFF77818C)),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: this.widget.isSelected
+                    ? Colors.white
+                    : const Color(0xFF77818C),
+              ),
             ),
           ],
         ),

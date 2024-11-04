@@ -52,9 +52,10 @@ class _AssetsViewState extends State<AssetsView> {
                 ),
                 const Padding(padding: EdgeInsets.only(right: 6)),
                 Text(
-                  "Assets / ${this.controller.assetsService.company.name!}",
+                  "Assets / ${this.controller.assetsService.company.name!} Unit",
                   style: const TextStyle(
                     color: Colors.white,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

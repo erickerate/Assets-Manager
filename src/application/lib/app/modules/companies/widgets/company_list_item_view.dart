@@ -51,10 +51,11 @@ class _CompanyListItemViewState extends State<CompanyListItemView> {
             ),
             const Padding(padding: EdgeInsets.only(right: 16)),
             Text(
-              this.widget.company.name ?? "",
+              "${this.widget.company.name} Unit",
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.white,
+                fontWeight: FontWeight.w500,
               ),
             )
           ],

@@ -130,25 +130,27 @@ class _TreeItemViewState extends State<TreeItemView> {
                   this.widget.treeItem.description,
                   style: const TextStyle(
                     overflow: TextOverflow.ellipsis,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
 
               // #endregion
 
-              // #region Status / Tipo Componente
+              // #region Tipo Componente / Status
 
               if (componentTreeItem != null) ...[
-                if (componentTreeItem.isAlert) ...[
-                  const Padding(padding: EdgeInsets.only(right: 6)),
-                  Image.asset(
-                    "assets/images/${componentTreeItem.status}.png",
-                  ),
-                ],
                 if (componentTreeItem.isEnergySensor) ...[
                   const Padding(padding: EdgeInsets.only(right: 6)),
                   Image.asset(
                     "assets/images/${componentTreeItem.sensorType}.png",
+                  ),
+                ],
+                if (componentTreeItem.isAlert) ...[
+                  const Padding(padding: EdgeInsets.only(right: 6)),
+                  Image.asset(
+                    "assets/images/${componentTreeItem.status}.png",
                   ),
                 ],
               ],
