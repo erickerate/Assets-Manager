@@ -3,14 +3,15 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 part 'companies_store.g.dart';
 
-/// Loja de empresas
-class CompaniesStore = _CompaniesStoreBase with _$CompaniesStore;
+/// Implementação da loja de empresas com MobX
+class CompaniesStore = CompaniesStoreBase with _$CompaniesStore;
 
-abstract class _CompaniesStoreBase with Store {
+abstract class CompaniesStoreBase with Store implements ICompaniesStore {
   // #region Constructors
 
-  _CompaniesStoreBase() {
-    this.service = Modular.get<IService<Company>>();
+  /// Implementação da loja de empresas com MobX
+  CompaniesStoreBase() {
+    this.service = Modular.get<ServiceBase<Company>>();
   }
 
   // #endregion
@@ -18,44 +19,50 @@ abstract class _CompaniesStoreBase with Store {
   // #region Members 'Service' :: service
 
   /// Serviço
-  late IService<Company> service;
+  @override
+  late ServiceBase<Company> service;
 
   // #endregion
 
-  // #region Members 'Companies' :: companies, queryCompanies()
+  // #region Members 'Companies' :: companies, dispatchCompanies()
 
   /// Empresas
+  @override
   @observable
   List<Company> companies = <Company>[];
 
   /// Definir listagem
+  @override
   @action
-  Future<void> queryCompanies() async {
+  Future<void> dispatchCompanies() async {
     try {
-      this.setIsLoading(true);
+      this.dispatchIsLoading(true);
 
       this.companies = await this.service.getAll();
 
-      this.setIsLoading(false);
+      this.dispatchIsLoading(false);
     } catch (exception) {
-      throw Exception('Fail in queryCompanies(): $exception');
+      throw Exception('Fail in dispatchCompanies(): $exception');
     }
   }
 
   // #endregion
 
-  // #region Members 'State' :: isLoading, setIsLoading
+  // #region Members 'State' :: isLoading, dispatchIsLoading
 
+  /// Está carregando?
+  @override
   @observable
   bool isLoading = true;
 
-  /// Definir carregando
+  /// Despachar carregando
+  @override
   @action
-  Future<void> setIsLoading(bool isLoading) async {
+  Future<void> dispatchIsLoading(bool isLoading) async {
     try {
       this.isLoading = isLoading;
     } catch (exception) {
-      throw Exception('Fail in setIsLoading(): $exception');
+      throw Exception('Fail in dispatchIsLoading(): $exception');
     }
   }
 

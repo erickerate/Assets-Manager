@@ -8,14 +8,7 @@ part of 'assets_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$AssetsStore on _AssetsStoreBase, Store {
-  Computed<Company>? _$companyComputed;
-
-  @override
-  Company get company =>
-      (_$companyComputed ??= Computed<Company>(() => super.company,
-              name: '_AssetsStoreBase.company'))
-          .value;
+mixin _$AssetsStore on AssetsStoreBase, Store {
   Computed<bool>? _$hasFiltersComputed;
 
   @override
@@ -53,10 +46,14 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     return super.assets;
   }
 
+  bool _assetsIsInitialized = false;
+
   @override
   set assets(List<Asset> value) {
-    _$assetsAtom.reportWrite(value, super.assets, () {
+    _$assetsAtom.reportWrite(value, _assetsIsInitialized ? super.assets : null,
+        () {
       super.assets = value;
+      _assetsIsInitialized = true;
     });
   }
 
@@ -69,10 +66,14 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     return super.locations;
   }
 
+  bool _locationsIsInitialized = false;
+
   @override
   set locations(List<Location> value) {
-    _$locationsAtom.reportWrite(value, super.locations, () {
+    _$locationsAtom.reportWrite(
+        value, _locationsIsInitialized ? super.locations : null, () {
       super.locations = value;
+      _locationsIsInitialized = true;
     });
   }
 
@@ -101,11 +102,17 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     return super.selectedCustomFilters;
   }
 
+  bool _selectedCustomFiltersIsInitialized = false;
+
   @override
   set selectedCustomFilters(List<AssetFilter> value) {
-    _$selectedCustomFiltersAtom.reportWrite(value, super.selectedCustomFilters,
-        () {
+    _$selectedCustomFiltersAtom.reportWrite(
+        value,
+        _selectedCustomFiltersIsInitialized
+            ? super.selectedCustomFilters
+            : null, () {
       super.selectedCustomFilters = value;
+      _selectedCustomFiltersIsInitialized = true;
     });
   }
 
@@ -125,28 +132,29 @@ mixin _$AssetsStore on _AssetsStoreBase, Store {
     });
   }
 
-  late final _$onLoadAsyncAction =
-      AsyncAction('_AssetsStoreBase.onLoad', context: context);
+  late final _$getAssetsAsyncAction =
+      AsyncAction('_AssetsStoreBase.getAssets', context: context);
 
   @override
-  Future<void> onLoad() {
-    return _$onLoadAsyncAction.run(() => super.onLoad());
+  Future<void> getAssets() {
+    return _$getAssetsAsyncAction.run(() => super.getAssets());
   }
 
-  late final _$refreshAsyncAction =
-      AsyncAction('_AssetsStoreBase.refresh', context: context);
+  late final _$refreshAssetsTreeAsyncAction =
+      AsyncAction('_AssetsStoreBase.refreshAssetsTree', context: context);
 
   @override
-  Future<void> refresh() {
-    return _$refreshAsyncAction.run(() => super.refresh());
+  Future<void> refreshAssetsTree() {
+    return _$refreshAssetsTreeAsyncAction.run(() => super.refreshAssetsTree());
   }
 
-  late final _$setIsLoadingAsyncAction =
-      AsyncAction('_AssetsStoreBase.setIsLoading', context: context);
+  late final _$dispatchIsLoadingAsyncAction =
+      AsyncAction('_AssetsStoreBase.dispatchIsLoading', context: context);
 
   @override
-  Future<void> setIsLoading(bool isLoading) {
-    return _$setIsLoadingAsyncAction.run(() => super.setIsLoading(isLoading));
+  Future<void> dispatchIsLoading(bool isLoading) {
+    return _$dispatchIsLoadingAsyncAction
+        .run(() => super.dispatchIsLoading(isLoading));
   }
 
   late final _$selectCustomFilterAsyncAction =
@@ -177,7 +185,6 @@ locations: ${locations},
 isLoading: ${isLoading},
 selectedCustomFilters: ${selectedCustomFilters},
 textSearchFilter: ${textSearchFilter},
-company: ${company},
 hasFilters: ${hasFilters}
     ''';
   }

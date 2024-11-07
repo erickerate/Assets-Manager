@@ -1,5 +1,4 @@
 import 'package:domain/domain.dart';
-import 'package:domain/src/models/tree/items/component_tree_item.dart';
 
 /// Filtro para tipo do sensor de energia
 class EnergySensorTypeFilter extends AssetFilter {

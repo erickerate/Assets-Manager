@@ -1,7 +1,7 @@
 import 'package:domain/domain.dart';
 
 /// Serviço para localizações
-class LocationsService implements IService<Location> {
+class LocationsService implements ServiceBase<Location> {
   // #region Constructors
 
   /// Serviço para localizações

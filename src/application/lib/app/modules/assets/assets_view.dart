@@ -1,7 +1,7 @@
-import 'package:application/app/modules/assets/assets_store.dart';
 import 'package:application/app/modules/assets/widgets/filters/asset_state_filters_widget.dart';
 import 'package:application/app/modules/assets/widgets/tree/tree_items_view.dart';
 import 'package:application/app/widgets/text_box_widget.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -30,7 +30,7 @@ class _AssetsViewState extends State<AssetsView> {
   // #region Members 'Store' :: controller, onRefresh()
 
   /// Controlador
-  final controller = Modular.get<AssetsStore>();
+  final controller = Modular.get<IAssetsStore>();
 
   // #endregion
 

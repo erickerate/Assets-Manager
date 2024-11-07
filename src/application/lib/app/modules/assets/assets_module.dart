@@ -17,18 +17,18 @@ class AssetsModule extends Module {
     i.addInstance<IAssetsRepository>(AssetsRepository(
       company: i.get<Company>(),
     ));
-    i.addInstance<IAssetsService>(AssetsService(
+    i.addInstance<AssetsServiceBase>(AssetsService(
       repository: i.get<IAssetsRepository>(),
     ));
 
     i.addInstance<IRepository<Location>>(LocationsRepository(
       company: i.get<Company>(),
     ));
-    i.addInstance<IService<Location>>(LocationsService(
+    i.addInstance<ServiceBase<Location>>(LocationsService(
       repository: i.get<IRepository<Location>>(),
     ));
 
-    i.addSingleton(AssetsStore.new);
+    i.addSingleton<IAssetsStore>(AssetsStore.new);
   }
 
   @override

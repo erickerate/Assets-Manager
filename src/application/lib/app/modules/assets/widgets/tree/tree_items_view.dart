@@ -1,4 +1,3 @@
-import 'package:application/app/modules/assets/assets_store.dart';
 import 'package:application/app/modules/assets/widgets/tree/tree_item_view.dart';
 import 'package:application/app/widgets/skeleton_loader_view.dart';
 import 'package:domain/domain.dart';
@@ -34,12 +33,12 @@ class _TreeItemsViewState extends State<TreeItemsView> {
   // #region Members 'Store' :: controller, onRefresh()
 
   /// Controlador
-  final controller = Modular.get<AssetsStore>();
+  final controller = Modular.get<IAssetsStore>();
 
   /// Ao atualizar
   Future<void> onRefresh() async {
     try {
-      await this.controller.onLoad();
+      await this.controller.getAssets();
     } catch (exception) {
       throw Exception("Fail in onRefreshing(): $exception");
     }

@@ -3,72 +3,60 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 part 'assets_store.g.dart';
 
-/// Loja de recursos
-class AssetsStore = _AssetsStoreBase with _$AssetsStore;
+/// Implementação da loja de recursos com MobX
+class AssetsStore = AssetsStoreBase with _$AssetsStore;
 
-/// Loja de recursos
-abstract class _AssetsStoreBase with Store {
+/// Implementação da loja de recursos com MobX
+abstract class AssetsStoreBase with Store implements IAssetsStore {
   // #region Constructors
 
-  _AssetsStoreBase() {
-    this.assetsService = Modular.get<IAssetsService>();
-    this.locationsService = Modular.get<IService<Location>>();
+  AssetsStoreBase() {
+    this.assetsService = Modular.get<AssetsServiceBase>();
+    this.locationsService = Modular.get<ServiceBase<Location>>();
   }
 
   // #endregion
 
-  // #region Members 'Services' :: assetsService, locationsService, company
+  // #region Members 'Assets' :: assetsService, assetsTree, assets, getAssets(), refreshAssetsTree()
 
   /// Serviço de recursos
-  late IAssetsService assetsService;
-
-  /// Serviço de localizações
-  late IService<Location> locationsService;
-
-  /// Empresas
-  @computed
-  Company get company {
-    return this.assetsService.company;
-  }
-
-  // #endregion
-
-  // #region Members 'Assets Tree' :: assetsTree
+  @override
+  late AssetsServiceBase assetsService;
 
   /// Árvore
+  @override
   @observable
   late AssetsTree assetsTree;
 
-  // #endregion
-
-  // #region Members 'Assets' :: assets, onLoad(), refresh
-
-  /// Empresas
+  /// Ativos
+  @override
   @observable
-  List<Asset> assets = <Asset>[];
+  late List<Asset> assets;
 
-  /// Ao carregar
+  /// Buscar ativos
+  @override
   @action
-  Future<void> onLoad() async {
+  Future<void> getAssets() async {
     try {
-      this.setIsLoading(true);
+      this.dispatchIsLoading(true);
 
       this.assets = await this.assetsService.getAll();
       this.locations = await this.locationsService.getAll();
 
-      await this.refresh();
+      await this.refreshAssetsTree();
 
-      this.setIsLoading(false);
+      this.dispatchIsLoading(false);
     } catch (exception) {
-      throw Exception('Fail in onLoad(): $exception');
+      throw Exception('Fail in getAssets(): $exception');
     }
   }
 
   /// Atualizar
+  @override
   @action
-  Future<void> refresh() async {
+  Future<void> refreshAssetsTree() async {
     try {
-      this.setIsLoading(true);
+      this.dispatchIsLoading(true);
 
       await Future.delayed(const Duration(seconds: 1));
 
@@ -84,59 +72,36 @@ abstract class _AssetsStoreBase with Store {
       );
       await this.assetsTree.build();
 
-      this.setIsLoading(false);
+      this.dispatchIsLoading(false);
     } catch (exception) {
-      throw Exception('Fail in refresh(): $exception');
+      throw Exception('Fail in refreshAssetsTree(): $exception');
     }
   }
 
   // #endregion
 
-  // #region Members 'Locations' :: locations
+  // #region Members 'Locations' :: locationsService, locations
+
+  /// Serviço de localizações
+  @override
+  late ServiceBase<Location> locationsService;
 
   /// Localizações
+  @override
   @observable
-  List<Location> locations = <Location>[];
+  late List<Location> locations;
 
   // #endregion
 
-  // #region Members 'State' :: isLoading, setIsLoading
-
-  @observable
-  bool isLoading = true;
-
-  /// Definir carregando
-  @action
-  Future<void> setIsLoading(bool isLoading) async {
-    try {
-      this.isLoading = isLoading;
-    } catch (exception) {
-      throw Exception('Fail in setIsLoading(): $exception');
-    }
-  }
-
-  // #endregion
-
-  // #region Members 'Custom Filters' :: customFilters, selectedCustomFilters, selectCustomFilter(), hasFilters
-
-  /// Filtros customizados
-  List<AssetFilter> get customFilters {
-    if (this._filters == null) {
-      this._filters = <AssetFilter>[];
-      this._filters!.add(EnergySensorTypeFilter());
-      this._filters!.add(CriticalAssetStateFilter());
-    }
-
-    return this._filters!;
-  }
-
-  List<AssetFilter>? _filters;
+  // #region Members 'Custom Filters' :: selectedCustomFilters, selectCustomFilter(), hasFilters
 
   /// Filtros selecionados
+  @override
   @observable
   List<AssetFilter> selectedCustomFilters = <AssetFilter>[];
 
   /// Selecionar filtro
+  @override
   @action
   Future<void> selectCustomFilter(AssetFilter filter) async {
     try {
@@ -154,6 +119,7 @@ abstract class _AssetsStoreBase with Store {
   }
 
   /// Possui filtros selecionados?
+  @override
   @computed
   bool get hasFilters =>
       this.selectedCustomFilters.isNotEmpty || this.textSearchFilter.hasFilter;
@@ -163,17 +129,39 @@ abstract class _AssetsStoreBase with Store {
   // #region Members 'Text Filter' :: textSearchFilter, onTextSearchFilterChanged()
 
   /// Filtro de texto
+  @override
   @observable
   TextSearchFilter textSearchFilter = TextSearchFilter();
 
   /// Ao buscar pelo filtro de texto
+  @override
   @action
   Future<void> onTextSearchFilterChanged(String value) async {
     try {
       this.textSearchFilter = TextSearchFilter(textSearch: value);
-      this.refresh();
+      this.refreshAssetsTree();
     } catch (exception) {
       throw Exception('Fail in onTextSearchFilterChanged(): $exception');
+    }
+  }
+
+  // #endregion
+
+  // #region Members 'State' :: isLoading, dispatchIsLoading
+
+  /// Está carregando?
+  @override
+  @observable
+  bool isLoading = true;
+
+  /// Despachar carregando
+  @override
+  @action
+  Future<void> dispatchIsLoading(bool isLoading) async {
+    try {
+      this.isLoading = isLoading;
+    } catch (exception) {
+      throw Exception('Fail in dispatchIsLoading(): $exception');
     }
   }
 

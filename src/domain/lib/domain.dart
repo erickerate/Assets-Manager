@@ -10,8 +10,8 @@ export 'src/repositories/repository.dart';
 export 'src/repositories/assets_repository.dart';
 
 // Services
-export 'src/services/service.dart';
-export 'src/services/assets_service.dart';
+export 'src/services/service_base.dart';
+export 'src/services/assets_service_base.dart';
 
 // Models
 export 'src/models/tree/assets_tree.dart';
@@ -21,3 +21,8 @@ export 'src/models/filters/asset_filter.dart';
 export 'src/models/filters/energy_sensor_type_filter.dart';
 export 'src/models/filters/critical_asset_state_filter.dart';
 export 'src/models/filters/text_search_filter.dart';
+
+// Stores
+export 'src/models/stores/store_base.dart';
+export 'src/models/stores/companies_store.dart';
+export 'src/models/stores/assets_store.dart';

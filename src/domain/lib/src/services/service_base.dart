@@ -1,7 +1,7 @@
 import 'package:domain/domain.dart';
 
 /// Serviço abstrato
-abstract class IService<T> {
+abstract class ServiceBase<T> {
   /// Repositório
   IRepository<T> get repository;
 

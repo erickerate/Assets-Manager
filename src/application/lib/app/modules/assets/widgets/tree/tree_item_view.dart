@@ -1,4 +1,3 @@
-import 'package:application/app/modules/assets/assets_store.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -47,7 +46,7 @@ class _TreeItemViewState extends State<TreeItemView> {
   // #region Members 'Store' :: controller
 
   /// Controlador
-  final controller = Modular.get<AssetsStore>();
+  final controller = Modular.get<IAssetsStore>();
 
   // #endregion
 

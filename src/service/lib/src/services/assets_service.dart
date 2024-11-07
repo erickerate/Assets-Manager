@@ -1,7 +1,7 @@
 import 'package:domain/domain.dart';
 
 /// Serviço para recursos
-class AssetsService implements IAssetsService {
+class AssetsService extends AssetsServiceBase {
   // #region Constructors
 
   /// Serviço para recursos

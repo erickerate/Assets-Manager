@@ -1,5 +1,4 @@
 import 'package:domain/domain.dart';
-import 'package:domain/src/models/tree/items/component_tree_item.dart';
 
 /// Item da árvore
 class TreeItem {
@@ -39,7 +38,7 @@ class TreeItem {
   }
 
   @override
-  String toString(){
+  String toString() {
     return "${this.level} - ${this.description}";
   }
 

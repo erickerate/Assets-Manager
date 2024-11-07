@@ -1,7 +1,7 @@
 import 'package:domain/domain.dart';
 
 /// Serviço para empresas
-class CompaniesService implements IService<Company> {
+class CompaniesService implements ServiceBase<Company> {
   // #region Constructors
 
   /// Serviço para empresas

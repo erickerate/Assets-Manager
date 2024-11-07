@@ -13,9 +13,9 @@ class CompaniesModule extends Module {
 
   @override
   void binds(i) {
-    i.addSingleton(CompaniesStore.new);
+    i.addSingleton<ICompaniesStore>(CompaniesStore.new);
     i.add<IRepository<Company>>(CompaniesRepository.new);
-    i.add<IService<Company>>(CompaniesService.new);
+    i.add<ServiceBase<Company>>(CompaniesService.new);
   }
 
   @override

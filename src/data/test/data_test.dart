@@ -1,6 +1,4 @@
 import 'package:data/data.dart';
-import 'package:data/src/repositories/assets_repository.dart';
-import 'package:data/src/repositories/locations_repository.dart';
 import 'package:domain/domain.dart';
 import 'package:test/test.dart';
 

@@ -1,4 +1,3 @@
-import 'package:application/app/modules/companies/companies_store.dart';
 import 'package:application/app/widgets/skeleton_loader_view.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
@@ -34,12 +33,12 @@ class _CompanyListViewState extends State<CompanyListView> {
   // #region Members 'Store' :: controller, onRefresh()
 
   /// Controlador
-  final controller = Modular.get<CompaniesStore>();
+  final controller = Modular.get<ICompaniesStore>();
 
   /// Ao atualizar
   Future<void> onRefresh() async {
     try {
-      await this.controller.queryCompanies();
+      await this.controller.dispatchCompanies();
     } catch (exception) {
       throw Exception("Fail in onRefreshing(): $exception");
     }
