@@ -6,7 +6,7 @@ Implementação de uma aplicação mobile para gestão de ativos industriais uti
 Abaixo você encontra screenshots das principais telas do aplicativo.
 
 #### Aplicação (v.07.11.2024)
-![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/overview.png)
+![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/app-overview.png)
 
 #### Trabalhos futuros
 
