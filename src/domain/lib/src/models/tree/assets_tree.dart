@@ -146,12 +146,6 @@ class AssetsTree {
       );
 
       // #endregion
-
-      // #region 4. Dispose
-
-      this.allTreeItems.clear();
-
-      // #endregion
     } on Exception catch (exception) {
       throw Exception("Fail in build(): $exception");
     }

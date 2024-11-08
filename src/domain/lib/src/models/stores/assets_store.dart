@@ -2,19 +2,29 @@ import 'package:domain/domain.dart';
 
 /// Interface para loja de ativos
 abstract class IAssetsStore implements StoreBase {
-  // #region Members 'Assets' :: assetsService, assetsTree, assets, getAssets(), refreshAssetsTree()
+  // #region Members 'Assets' :: assetsService, assets, getAssets()
 
   /// Serviço de recursos
   late AssetsServiceBase assetsService;
-
-  /// Árvore
-  late AssetsTree assetsTree;
 
   /// Ativos
   late List<Asset> assets;
 
   /// Buscar ativos
   Future<void> getAssets();
+
+  // #endregion
+
+  // #region Members 'Assets Tree' :: assetsTree, expandedTreeItems, toggleExpandedItem, refreshAssetsTree()
+
+  /// Árvore
+  late AssetsTree assetsTree;
+
+  /// Itens expandidos
+  late List<TreeItem> expandedTreeItems;
+
+  /// Alternar item expandido
+  void toggleExpandedItem(TreeItem treeItem);
 
   /// Atualizar
   Future<void> refreshAssetsTree();

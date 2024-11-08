@@ -14,31 +14,11 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
   @override
   bool get hasFilters =>
       (_$hasFiltersComputed ??= Computed<bool>(() => super.hasFilters,
-              name: '_AssetsStoreBase.hasFilters'))
+              name: 'AssetsStoreBase.hasFilters'))
           .value;
 
-  late final _$assetsTreeAtom =
-      Atom(name: '_AssetsStoreBase.assetsTree', context: context);
-
-  @override
-  AssetsTree get assetsTree {
-    _$assetsTreeAtom.reportRead();
-    return super.assetsTree;
-  }
-
-  bool _assetsTreeIsInitialized = false;
-
-  @override
-  set assetsTree(AssetsTree value) {
-    _$assetsTreeAtom.reportWrite(
-        value, _assetsTreeIsInitialized ? super.assetsTree : null, () {
-      super.assetsTree = value;
-      _assetsTreeIsInitialized = true;
-    });
-  }
-
   late final _$assetsAtom =
-      Atom(name: '_AssetsStoreBase.assets', context: context);
+      Atom(name: 'AssetsStoreBase.assets', context: context);
 
   @override
   List<Asset> get assets {
@@ -57,8 +37,44 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
     });
   }
 
+  late final _$assetsTreeAtom =
+      Atom(name: 'AssetsStoreBase.assetsTree', context: context);
+
+  @override
+  AssetsTree get assetsTree {
+    _$assetsTreeAtom.reportRead();
+    return super.assetsTree;
+  }
+
+  bool _assetsTreeIsInitialized = false;
+
+  @override
+  set assetsTree(AssetsTree value) {
+    _$assetsTreeAtom.reportWrite(
+        value, _assetsTreeIsInitialized ? super.assetsTree : null, () {
+      super.assetsTree = value;
+      _assetsTreeIsInitialized = true;
+    });
+  }
+
+  late final _$expandedTreeItemsAtom =
+      Atom(name: 'AssetsStoreBase.expandedTreeItems', context: context);
+
+  @override
+  List<TreeItem> get expandedTreeItems {
+    _$expandedTreeItemsAtom.reportRead();
+    return super.expandedTreeItems;
+  }
+
+  @override
+  set expandedTreeItems(List<TreeItem> value) {
+    _$expandedTreeItemsAtom.reportWrite(value, super.expandedTreeItems, () {
+      super.expandedTreeItems = value;
+    });
+  }
+
   late final _$locationsAtom =
-      Atom(name: '_AssetsStoreBase.locations', context: context);
+      Atom(name: 'AssetsStoreBase.locations', context: context);
 
   @override
   List<Location> get locations {
@@ -77,24 +93,8 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
     });
   }
 
-  late final _$isLoadingAtom =
-      Atom(name: '_AssetsStoreBase.isLoading', context: context);
-
-  @override
-  bool get isLoading {
-    _$isLoadingAtom.reportRead();
-    return super.isLoading;
-  }
-
-  @override
-  set isLoading(bool value) {
-    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
-      super.isLoading = value;
-    });
-  }
-
   late final _$selectedCustomFiltersAtom =
-      Atom(name: '_AssetsStoreBase.selectedCustomFilters', context: context);
+      Atom(name: 'AssetsStoreBase.selectedCustomFilters', context: context);
 
   @override
   List<AssetFilter> get selectedCustomFilters {
@@ -102,22 +102,16 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
     return super.selectedCustomFilters;
   }
 
-  bool _selectedCustomFiltersIsInitialized = false;
-
   @override
   set selectedCustomFilters(List<AssetFilter> value) {
-    _$selectedCustomFiltersAtom.reportWrite(
-        value,
-        _selectedCustomFiltersIsInitialized
-            ? super.selectedCustomFilters
-            : null, () {
+    _$selectedCustomFiltersAtom.reportWrite(value, super.selectedCustomFilters,
+        () {
       super.selectedCustomFilters = value;
-      _selectedCustomFiltersIsInitialized = true;
     });
   }
 
   late final _$textSearchFilterAtom =
-      Atom(name: '_AssetsStoreBase.textSearchFilter', context: context);
+      Atom(name: 'AssetsStoreBase.textSearchFilter', context: context);
 
   @override
   TextSearchFilter get textSearchFilter {
@@ -132,8 +126,24 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
     });
   }
 
+  late final _$isLoadingAtom =
+      Atom(name: 'AssetsStoreBase.isLoading', context: context);
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
   late final _$getAssetsAsyncAction =
-      AsyncAction('_AssetsStoreBase.getAssets', context: context);
+      AsyncAction('AssetsStoreBase.getAssets', context: context);
 
   @override
   Future<void> getAssets() {
@@ -141,24 +151,15 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
   }
 
   late final _$refreshAssetsTreeAsyncAction =
-      AsyncAction('_AssetsStoreBase.refreshAssetsTree', context: context);
+      AsyncAction('AssetsStoreBase.refreshAssetsTree', context: context);
 
   @override
   Future<void> refreshAssetsTree() {
     return _$refreshAssetsTreeAsyncAction.run(() => super.refreshAssetsTree());
   }
 
-  late final _$dispatchIsLoadingAsyncAction =
-      AsyncAction('_AssetsStoreBase.dispatchIsLoading', context: context);
-
-  @override
-  Future<void> dispatchIsLoading(bool isLoading) {
-    return _$dispatchIsLoadingAsyncAction
-        .run(() => super.dispatchIsLoading(isLoading));
-  }
-
   late final _$selectCustomFilterAsyncAction =
-      AsyncAction('_AssetsStoreBase.selectCustomFilter', context: context);
+      AsyncAction('AssetsStoreBase.selectCustomFilter', context: context);
 
   @override
   Future<void> selectCustomFilter(AssetFilter filter) {
@@ -167,7 +168,7 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
   }
 
   late final _$onTextSearchFilterChangedAsyncAction = AsyncAction(
-      '_AssetsStoreBase.onTextSearchFilterChanged',
+      'AssetsStoreBase.onTextSearchFilterChanged',
       context: context);
 
   @override
@@ -176,15 +177,39 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
         .run(() => super.onTextSearchFilterChanged(value));
   }
 
+  late final _$dispatchIsLoadingAsyncAction =
+      AsyncAction('AssetsStoreBase.dispatchIsLoading', context: context);
+
+  @override
+  Future<void> dispatchIsLoading(bool isLoading) {
+    return _$dispatchIsLoadingAsyncAction
+        .run(() => super.dispatchIsLoading(isLoading));
+  }
+
+  late final _$AssetsStoreBaseActionController =
+      ActionController(name: 'AssetsStoreBase', context: context);
+
+  @override
+  void toggleExpandedItem(TreeItem treeItem) {
+    final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
+        name: 'AssetsStoreBase.toggleExpandedItem');
+    try {
+      return super.toggleExpandedItem(treeItem);
+    } finally {
+      _$AssetsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-assetsTree: ${assetsTree},
 assets: ${assets},
+assetsTree: ${assetsTree},
+expandedTreeItems: ${expandedTreeItems},
 locations: ${locations},
-isLoading: ${isLoading},
 selectedCustomFilters: ${selectedCustomFilters},
 textSearchFilter: ${textSearchFilter},
+isLoading: ${isLoading},
 hasFilters: ${hasFilters}
     ''';
   }

@@ -17,16 +17,11 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
   // #endregion
 
-  // #region Members 'Assets' :: assetsService, assetsTree, assets, getAssets(), refreshAssetsTree()
+  // #region Members 'Assets' :: assetsService, assets, getAssets()
 
   /// Serviço de recursos
   @override
   late AssetsServiceBase assetsService;
-
-  /// Árvore
-  @override
-  @observable
-  late AssetsTree assetsTree;
 
   /// Ativos
   @override
@@ -51,6 +46,15 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
     }
   }
 
+  // #endregion
+
+  // #region Members 'Assets Tree' :: assetsTree, refreshAssetsTree(), expandedTreeItems(), toggleExpandedItem()
+
+  /// Árvore
+  @override
+  @observable
+  late AssetsTree assetsTree;
+
   /// Atualizar
   @override
   @action
@@ -72,9 +76,36 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
       );
       await this.assetsTree.build();
 
+      this.expandedTreeItems =
+          this.hasFilters ? this.assetsTree.allTreeItems : [];
+
       this.dispatchIsLoading(false);
     } catch (exception) {
       throw Exception('Fail in refreshAssetsTree(): $exception');
+    }
+  }
+
+  /// Itens expandidos
+  @override
+  @observable
+  List<TreeItem> expandedTreeItems = <TreeItem>[];
+
+  /// Alternar item expandido
+  @override
+  @action
+  void toggleExpandedItem(TreeItem treeItem) {
+    try {
+      List<TreeItem> treeItems = this.expandedTreeItems.toList();
+
+      if (treeItems.contains(treeItem)) {
+        treeItems.remove(treeItem);
+      } else {
+        treeItems.add(treeItem);
+      }
+
+      this.expandedTreeItems = treeItems.toList();
+    } on Exception catch (exception) {
+      throw Exception("Fail in toggleExpandedItem(): $exception");
     }
   }
 

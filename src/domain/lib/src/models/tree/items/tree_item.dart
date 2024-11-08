@@ -37,6 +37,11 @@ class TreeItem {
     return 1;
   }
 
+  /// É primeiro nível?
+  bool get isFirstLevel {
+    return this.level == 1;
+  }
+
   @override
   String toString() {
     return "${this.level} - ${this.description}";
@@ -51,7 +56,10 @@ class TreeItem {
 
   // #endregion
 
-  // #region Members 'Children' :: children, addChild()
+  // #region Members 'Children' :: hasChildren, children, addChild()
+
+  /// Possui filhos
+  bool get hasChildren => this.children.isNotEmpty;
 
   /// Filhos
   List<TreeItem> children = <TreeItem>[];

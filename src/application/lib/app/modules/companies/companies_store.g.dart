@@ -9,16 +9,24 @@ part of 'companies_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$CompaniesStore on CompaniesStoreBase, Store {
-  Computed<List<Company>>? _$companiesComputed;
+  late final _$companiesAtom =
+      Atom(name: 'CompaniesStoreBase.companies', context: context);
 
   @override
-  List<Company> get companies =>
-      (_$companiesComputed ??= Computed<List<Company>>(() => super.companies,
-              name: '_CompaniesStoreBase.companies'))
-          .value;
+  List<Company> get companies {
+    _$companiesAtom.reportRead();
+    return super.companies;
+  }
+
+  @override
+  set companies(List<Company> value) {
+    _$companiesAtom.reportWrite(value, super.companies, () {
+      super.companies = value;
+    });
+  }
 
   late final _$isLoadingAtom =
-      Atom(name: '_CompaniesStoreBase.isLoading', context: context);
+      Atom(name: 'CompaniesStoreBase.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -34,7 +42,7 @@ mixin _$CompaniesStore on CompaniesStoreBase, Store {
   }
 
   late final _$dispatchCompaniesAsyncAction =
-      AsyncAction('_CompaniesStoreBase.dispatchCompanies', context: context);
+      AsyncAction('CompaniesStoreBase.dispatchCompanies', context: context);
 
   @override
   Future<void> dispatchCompanies() {
@@ -42,7 +50,7 @@ mixin _$CompaniesStore on CompaniesStoreBase, Store {
   }
 
   late final _$dispatchIsLoadingAsyncAction =
-      AsyncAction('_CompaniesStoreBase.dispatchIsLoading', context: context);
+      AsyncAction('CompaniesStoreBase.dispatchIsLoading', context: context);
 
   @override
   Future<void> dispatchIsLoading(bool isLoading) {
@@ -53,8 +61,8 @@ mixin _$CompaniesStore on CompaniesStoreBase, Store {
   @override
   String toString() {
     return '''
-isLoading: ${isLoading},
-companies: ${companies}
+companies: ${companies},
+isLoading: ${isLoading}
     ''';
   }
 }
