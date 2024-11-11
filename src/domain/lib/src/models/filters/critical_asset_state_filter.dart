@@ -1,4 +1,5 @@
 import 'package:domain/domain.dart';
+import 'package:domain/src/models/tree/items/tree_item_with_status.dart';
 
 /// Filtro de estado para estado crítico
 class CriticalAssetStateFilter extends AssetFilter {
@@ -17,8 +18,8 @@ class CriticalAssetStateFilter extends AssetFilter {
   @override
   bool meets(TreeItem treeItem) {
     try {
-      if (treeItem is ComponentTreeItem) {
-        return treeItem.status == "alert";
+      if (treeItem is TreeItemWithStatus) {
+        return treeItem.isAlert;
       }
 
       return false;

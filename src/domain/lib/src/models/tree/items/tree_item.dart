@@ -86,7 +86,7 @@ class TreeItem {
   /// Criar item a partir do recurso
   static TreeItem fromAsset(Asset asset) {
     // Componente
-    bool isComponent = asset.sensorId != null;
+    bool isComponent = asset.sensorType != null;
     if (isComponent) {
       return ComponentTreeItem(
         id: asset.id!,
@@ -98,11 +98,11 @@ class TreeItem {
     }
 
     // Ativo
-    return TreeItem(
+    return AssetTreeItem(
       id: asset.id!,
       parentId: asset.parentId ?? asset.locationId,
-      type: "asset",
       description: asset.name!,
+      status: asset.status,
     );
   }
 

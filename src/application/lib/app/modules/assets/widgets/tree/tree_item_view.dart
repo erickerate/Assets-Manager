@@ -42,6 +42,12 @@ class _TreeItemViewState extends State<TreeItemView> {
         (this.widget.treeItem is ComponentTreeItem)
             ? this.widget.treeItem as ComponentTreeItem
             : null;
+
+    TreeItemWithStatus? treeItemWithStatus =
+        (this.widget.treeItem is TreeItemWithStatus)
+            ? this.widget.treeItem as TreeItemWithStatus
+            : null;
+
     Color lineColor = const Color(0xFFD8DFE6);
     return Observer(
       builder: (context) {
@@ -180,22 +186,27 @@ class _TreeItemViewState extends State<TreeItemView> {
 
                     // #endregion
 
-                    // #region Tipo Componente / Status
+                    // #region Tipo Componente
 
-                    if (componentTreeItem != null) ...[
-                      if (componentTreeItem.isEnergySensor) ...[
-                        const Padding(padding: EdgeInsets.only(right: 6)),
-                        Image.asset(
-                          "assets/images/${componentTreeItem.sensorType}.png",
-                        ),
-                      ],
-                      if (componentTreeItem.isAlert) ...[
-                        const Padding(padding: EdgeInsets.only(right: 6)),
-                        Image.asset(
-                          "assets/images/${componentTreeItem.status}.png",
-                        ),
-                      ],
+                    if (componentTreeItem != null &&
+                        componentTreeItem.isEnergySensor) ...[
+                      const Padding(padding: EdgeInsets.only(right: 6)),
+                      Image.asset(
+                        "assets/images/${componentTreeItem.sensorType}.png",
+                      ),
                     ],
+
+                    // #endregion
+
+                    // #region Status
+
+                    if (treeItemWithStatus != null &&
+                        treeItemWithStatus.isAlert) ...[
+                      const Padding(padding: EdgeInsets.only(right: 6)),
+                      Image.asset(
+                        "assets/images/${treeItemWithStatus.status}.png",
+                      ),
+                    ]
 
                     // #endregion
                   ],

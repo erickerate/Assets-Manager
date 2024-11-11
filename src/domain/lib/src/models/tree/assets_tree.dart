@@ -34,11 +34,11 @@ class AssetsTree {
   // #region Members 'Utils' :: buildFirstBorns(), getFirstBorn()
 
   /// Construir primogênitos
-  List<TreeItem> buildFirstBorns(List<TreeItem> treeItems) {
+  List<TreeItem> buildFirstBorns() {
     try {
       List<TreeItem> firstBorns = <TreeItem>[];
 
-      for (TreeItem treeItem in treeItems) {
+      for (TreeItem treeItem in this.filteredTreeItems) {
         TreeItem firstBorn = this.buildFirstBorn(treeItem);
         firstBorns.add(firstBorn);
       }
@@ -74,13 +74,16 @@ class AssetsTree {
 
   // #endregion
 
-  // #region Members 'Tree' :: firstBorns, allTreeItems, build()
+  // #region Members 'Tree' :: firstBorns, allTreeItems, filteredTreeItems, build()
 
   /// Itens primogênitos
   List<TreeItem> firstBorns = <TreeItem>[];
 
   /// Todos itens
   List<TreeItem> allTreeItems = <TreeItem>[];
+
+  /// Itens filtrados
+  List<TreeItem> filteredTreeItems = <TreeItem>[];
 
   /// Construir árvore
   Future<void> build() async {
@@ -90,9 +93,8 @@ class AssetsTree {
       DateTime start = DateTime.now();
 
       this.firstBorns.clear();
+      this.filteredTreeItems.clear();
       this.allTreeItems.clear();
-
-      List<TreeItem> filteredTreeItems = <TreeItem>[];
 
       List<TreeItem> locationTreeItems = this
           .locations
@@ -116,13 +118,13 @@ class AssetsTree {
       start = DateTime.now();
 
       if (this.filters.isEmpty) {
-        filteredTreeItems = this.allTreeItems;
+        this.filteredTreeItems = this.allTreeItems;
       } else {
         for (TreeItem treeItem in this.allTreeItems) {
           bool meetsAnyFilter =
               this.filters.all((filter) => filter.meets(treeItem));
           if (meetsAnyFilter) {
-            filteredTreeItems.add(treeItem);
+            this.filteredTreeItems.add(treeItem);
           }
         }
       }
@@ -138,7 +140,7 @@ class AssetsTree {
 
       start = DateTime.now();
 
-      this.firstBorns = this.buildFirstBorns(filteredTreeItems);
+      this.firstBorns = this.buildFirstBorns();
 
       end = DateTime.now();
       print(
