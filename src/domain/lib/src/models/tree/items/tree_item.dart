@@ -31,6 +31,9 @@ class TreeItem {
   /// Visível?
   bool visible = true;
 
+  /// Fixado expandido?
+  bool isFixedExpanded = false;
+
   /// Nível
   int get level {
     // Tenta primeiro pela coleção de ascendentes

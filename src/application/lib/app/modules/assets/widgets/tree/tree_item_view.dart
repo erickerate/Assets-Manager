@@ -44,7 +44,7 @@ class _TreeItemViewState extends State<TreeItemView> {
         ITreeItemStore treeItemStore = this.widget.treeItemStore;
         TreeItem treeItem = treeItemStore.treeItem;
         bool expanded = treeItemStore.expanded;
-        bool canToggleExpand = treeItemStore.canToggleExpand;
+        bool isFixedExpanded = treeItemStore.isFixedExpanded;
 
         // Filhos
         List<TreeItem> children = treeItem.children;
@@ -81,6 +81,7 @@ class _TreeItemViewState extends State<TreeItemView> {
                         alignment: Alignment.topLeft,
                         children: [
                           // #region Linha vertical
+
                           Container(
                             padding: EdgeInsets.zero,
                             margin: EdgeInsets.only(left: paddingLeft),
@@ -88,8 +89,11 @@ class _TreeItemViewState extends State<TreeItemView> {
                             height: double.infinity,
                             color: lineColor,
                           ),
+
                           // #endregion
+
                           // #region Linha horizontal
+
                           Visibility(
                             visible: hasPointer,
                             child: Container(
@@ -111,6 +115,7 @@ class _TreeItemViewState extends State<TreeItemView> {
                               ),
                             ),
                           )
+
                           // #endregion
                         ],
                       );
@@ -134,17 +139,19 @@ class _TreeItemViewState extends State<TreeItemView> {
                             expanded
                                 ? Icons.keyboard_arrow_down
                                 : Icons.keyboard_arrow_right,
-                            color: canToggleExpand
-                                ? Colors.black
-                                : const Color(0xFF77818C),
+                            color: isFixedExpanded
+                                ? const Color(0xFF77818C)
+                                : Colors.black,
                             size: 24,
                           ),
-                          onPressed: () {
-                            treeItemStore.setExpanded(
-                              !treeItemStore.expanded,
-                              setChildrenVisibility: true,
-                            );
-                          },
+                          onPressed: isFixedExpanded
+                              ? null
+                              : () {
+                                  treeItemStore.setExpanded(
+                                    !treeItemStore.expanded,
+                                    setChildrenVisibility: true,
+                                  );
+                                },
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(right: 2)),

@@ -21,7 +21,6 @@ class _AssetsViewState extends State<AssetsView> {
     try {
       super.initState();
 
-      // Escuta o ReceivePort para receber o resultado do isolate
       Modular.get<IAssetsStore>()
           .receivePort
           .listen(Modular.get<IAssetsStore>().listen);

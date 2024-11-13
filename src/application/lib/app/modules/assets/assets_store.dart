@@ -37,8 +37,8 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
         for (TreeItem treeItem in visibleTreeItems) {
           ITreeItemStore treeItemStore = this.treeItemStores[treeItem.id]!;
           treeItemStore.setVisible(true);
-          treeItemStore.setCanToggleExpand(true);
-          treeItemStore.setExpanded(true);
+          treeItemStore.setExpanded(treeItem.isFixedExpanded);
+          treeItemStore.setIsFixedExpanded(treeItem.isFixedExpanded);
         }
       }
 
@@ -115,7 +115,7 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
         bool visible =
             mustMaintainRootsVisible && treeItemStore.treeItem.isRoot;
         treeItemStore.setVisible(visible);
-        treeItemStore.setCanToggleExpand(true);
+        treeItemStore.setIsFixedExpanded(false);
         treeItemStore.setExpanded(false);
       }
       if (!this.hasFilters) {

@@ -2,7 +2,7 @@ import 'package:domain/domain.dart';
 
 /// Interface loja para item da árvore
 abstract class ITreeItemStore {
-  // #region Members 'TreeItem' :: treeItem, visible, setVisible(), expanded, setExpanded()
+  // #region Members 'TreeItem' :: treeItem, visible, setVisible(), expanded, setExpanded(), isFixedVisible, setIsFixedVisible()
 
   /// Item
   late TreeItem treeItem;
@@ -19,11 +19,11 @@ abstract class ITreeItemStore {
   /// Definir expandido
   void setExpanded(bool expanded, {bool setChildrenVisibility = false});
 
-  /// Pode alternar expandido?
-  bool canToggleExpand = true;
+  /// Está fixo em modo expandido?
+  bool isFixedExpanded = false;
 
-  /// Definir correspondência de filtro
-  void setCanToggleExpand(bool canToggleExpanded);
+  /// Definir Está fixo em modo expandido?
+  void setIsFixedExpanded(bool isFixedExpanded);
 
   // #endregion
 }

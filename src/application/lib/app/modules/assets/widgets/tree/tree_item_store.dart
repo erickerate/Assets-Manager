@@ -43,10 +43,12 @@ abstract class TreeItemStoreBase with Store implements ITreeItemStore {
   @override
   @action
   void setExpanded(bool expanded, {bool setChildrenVisibility = false}) {
-    if (!this.canToggleExpand) return;
+    if (this.isFixedExpanded) {
+      return;
+    }
 
     this.expanded = expanded;
-    if (expanded && setChildrenVisibility) {
+    if (this.expanded && setChildrenVisibility) {
       for (TreeItem treeItem in this.treeItem.children) {
         ITreeItemStore treeItemStore =
             this.assetsStore.treeItemStores[treeItem.id]!;
@@ -56,16 +58,19 @@ abstract class TreeItemStoreBase with Store implements ITreeItemStore {
     }
   }
 
-  /// Pode alternar expandido?
+  /// Está fixo em modo expandido?
   @override
   @observable
-  bool canToggleExpand = true;
+  bool isFixedExpanded = false;
 
-  /// Definir pode alternar expandido?
+  /// Definir Está fixo em modo expandido?
   @override
   @action
-  void setCanToggleExpand(bool canToggleExpand) {
-    this.canToggleExpand = canToggleExpand;
+  void setIsFixedExpanded(bool isFixedExpanded) {
+    if (this.isFixedExpanded == isFixedExpanded) return;
+
+    this.isFixedExpanded = isFixedExpanded;
+    this.treeItem.isFixedExpanded = this.isFixedExpanded;
   }
 
   @override

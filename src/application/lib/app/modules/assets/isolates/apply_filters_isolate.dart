@@ -18,6 +18,7 @@ void executeFiltersTask(IsolateModel model) {
       if (visible) {
         treeItem.visible = true;
         for (TreeItem ascendant in treeItem.ascendants) {
+          ascendant.isFixedExpanded = true;
           ascendant.visible = true;
         }
       }

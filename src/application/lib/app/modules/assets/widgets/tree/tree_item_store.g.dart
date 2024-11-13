@@ -10,7 +10,7 @@ part of 'tree_item_store.dart';
 
 mixin _$TreeItemStore on TreeItemStoreBase, Store {
   late final _$treeItemAtom =
-      Atom(name: '_TreeItemStoreBase.treeItem', context: context);
+      Atom(name: 'TreeItemStoreBase.treeItem', context: context);
 
   @override
   TreeItem get treeItem {
@@ -30,7 +30,7 @@ mixin _$TreeItemStore on TreeItemStoreBase, Store {
   }
 
   late final _$visibleAtom =
-      Atom(name: '_TreeItemStoreBase.visible', context: context);
+      Atom(name: 'TreeItemStoreBase.visible', context: context);
 
   @override
   bool get visible {
@@ -46,7 +46,7 @@ mixin _$TreeItemStore on TreeItemStoreBase, Store {
   }
 
   late final _$expandedAtom =
-      Atom(name: '_TreeItemStoreBase.expanded', context: context);
+      Atom(name: 'TreeItemStoreBase.expanded', context: context);
 
   @override
   bool get expanded {
@@ -61,56 +61,56 @@ mixin _$TreeItemStore on TreeItemStoreBase, Store {
     });
   }
 
-  late final _$canToggleExpandAtom =
-      Atom(name: '_TreeItemStoreBase.canToggleExpand', context: context);
+  late final _$isFixedExpandedAtom =
+      Atom(name: 'TreeItemStoreBase.isFixedExpanded', context: context);
 
   @override
-  bool get canToggleExpand {
-    _$canToggleExpandAtom.reportRead();
-    return super.canToggleExpand;
+  bool get isFixedExpanded {
+    _$isFixedExpandedAtom.reportRead();
+    return super.isFixedExpanded;
   }
 
   @override
-  set canToggleExpand(bool value) {
-    _$canToggleExpandAtom.reportWrite(value, super.canToggleExpand, () {
-      super.canToggleExpand = value;
+  set isFixedExpanded(bool value) {
+    _$isFixedExpandedAtom.reportWrite(value, super.isFixedExpanded, () {
+      super.isFixedExpanded = value;
     });
   }
 
-  late final _$_TreeItemStoreBaseActionController =
-      ActionController(name: '_TreeItemStoreBase', context: context);
+  late final _$TreeItemStoreBaseActionController =
+      ActionController(name: 'TreeItemStoreBase', context: context);
 
   @override
   void setVisible(bool visible) {
-    final _$actionInfo = _$_TreeItemStoreBaseActionController.startAction(
-        name: '_TreeItemStoreBase.setVisible');
+    final _$actionInfo = _$TreeItemStoreBaseActionController.startAction(
+        name: 'TreeItemStoreBase.setVisible');
     try {
       return super.setVisible(visible);
     } finally {
-      _$_TreeItemStoreBaseActionController.endAction(_$actionInfo);
+      _$TreeItemStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setExpanded(bool expanded, {bool setChildrenVisibility = false}) {
-    final _$actionInfo = _$_TreeItemStoreBaseActionController.startAction(
-        name: '_TreeItemStoreBase.setExpanded');
+    final _$actionInfo = _$TreeItemStoreBaseActionController.startAction(
+        name: 'TreeItemStoreBase.setExpanded');
     try {
       return super
           .setExpanded(expanded, setChildrenVisibility: setChildrenVisibility);
     } finally {
-      _$_TreeItemStoreBaseActionController.endAction(_$actionInfo);
+      _$TreeItemStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void setCanToggleExpand(bool canToggleExpand) {
-    final _$actionInfo = _$_TreeItemStoreBaseActionController.startAction(
-        name: '_TreeItemStoreBase.setCanToggleExpand');
+  void setIsFixedExpanded(bool isFixedExpanded) {
+    final _$actionInfo = _$TreeItemStoreBaseActionController.startAction(
+        name: 'TreeItemStoreBase.setIsFixedExpanded');
     try {
-      return super.setCanToggleExpand(canToggleExpand);
+      return super.setIsFixedExpanded(isFixedExpanded);
     } finally {
-      _$_TreeItemStoreBaseActionController.endAction(_$actionInfo);
+      _$TreeItemStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
@@ -120,7 +120,7 @@ mixin _$TreeItemStore on TreeItemStoreBase, Store {
 treeItem: ${treeItem},
 visible: ${visible},
 expanded: ${expanded},
-canToggleExpand: ${canToggleExpand}
+isFixedExpanded: ${isFixedExpanded}
     ''';
   }
 }
