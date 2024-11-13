@@ -1,3 +1,4 @@
+import 'package:darq/darq.dart';
 import 'package:domain/domain.dart';
 
 /// Serviço abstrato para recursos
@@ -74,9 +75,18 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
         }
       }
 
+      // Caminho até a raiz (Caminho do pai + o item vigente)
+      List<TreeItem> orderedTreeItems = map.values.orderBy((o) => o.level).toList();
+      for (TreeItem treeItem in orderedTreeItems) {
+        if (treeItem.parentId == null) continue;
+
+        parentTreeItem = map[treeItem.parentId]!;
+        treeItem.ascendants = [...parentTreeItem.ascendants, parentTreeItem];
+      }
+
       end = DateTime.now();
       print(
-        "Passo 3: Constrói estrutura (${end.difference(start).inSeconds} s)",
+        "Passo 2: Constrói estrutura (${end.difference(start).inSeconds} s)",
       );
 
       return assetsTree;

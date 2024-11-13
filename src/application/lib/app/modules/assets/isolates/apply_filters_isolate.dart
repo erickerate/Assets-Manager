@@ -16,7 +16,10 @@ void executeFiltersTask(IsolateModel model) {
       bool visible = treeItemMeetsAnyFilter(treeItem, model.filters);
 
       if (visible) {
-        setDescendantsVisible(treeItem);
+        treeItem.visible = true;
+        for (TreeItem ascendant in treeItem.ascendants) {
+          ascendant.visible = true;
+        }
       }
     }
 
@@ -38,21 +41,5 @@ bool treeItemMeetsAnyFilter(TreeItem treeItem, List<AssetFilter> filters) {
     return meets;
   } on Exception catch (exception) {
     throw Exception("Fail in treeItemMeetsAnyFilter(): $exception");
-  }
-}
-
-/// Aplicar filtro bottom-up para definir visibilidade
-void setDescendantsVisible(TreeItem treeItem) {
-  try {
-    if (treeItem.visible) return;
-
-    treeItem.visible = true;
-
-    TreeItem? parentTreeItem = treeItem.parent;
-    if (parentTreeItem != null) {
-      setDescendantsVisible(parentTreeItem);
-    }
-  } on Exception catch (exception) {
-    throw Exception("Fail in setDescendantsVisible(): $exception");
   }
 }

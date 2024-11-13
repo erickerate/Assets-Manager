@@ -1,7 +1,6 @@
 import 'dart:isolate';
 
 import 'package:application/app/modules/assets/isolates/apply_filters_isolate.dart';
-import 'package:darq/darq.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -21,7 +20,7 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
   // #endregion
 
-  // #region Members 'Isolate' ::
+  // #region Members 'Isolate' :: isolate, receivePort, listen()
 
   @override
   Isolate? isolate;
@@ -29,9 +28,29 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
   @override
   final ReceivePort receivePort = ReceivePort();
 
+  @override
+  void listen(dynamic data) {
+    try {
+      if (data is List<TreeItem>) {
+        List<TreeItem> visibleTreeItems = data;
+
+        for (TreeItem treeItem in visibleTreeItems) {
+          ITreeItemStore treeItemStore = this.treeItemStores[treeItem.id]!;
+          treeItemStore.setVisible(true);
+          treeItemStore.setCanToggleExpand(true);
+          treeItemStore.setExpanded(true);
+        }
+      }
+
+      this.dispatchIsLoading(false);
+    } catch (exception) {
+      throw Exception("Fail in listen(): $exception");
+    }
+  }
+
   // #endregion
 
-  // #region Members 'Assets' :: assetsService, assets, getAssets()
+  // #region Members 'Assets' :: assetsService, assets
 
   /// Serviço de recursos
   @override
@@ -44,7 +63,7 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
   // #endregion
 
-  // #region Members 'Assets Tree' :: treeItemStores, assetsTree, buildTreeAssets(), refreshAssetsTree(), expandedTreeItems(), toggleExpandedItem()
+  // #region Members 'Assets Tree' :: treeItemStores, buildTreeAssets(), refreshAssetsTree(), expandedTreeItems(), toggleExpandedItem()
 
   /// Itens
   @override
@@ -125,64 +144,6 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
     }
   }
 
-  @override
-  void listen(dynamic data) {
-    try {
-      if (data is List<TreeItem>) {
-        List<TreeItem> visibleTreeItems = data;
-
-        for (TreeItem treeItem in visibleTreeItems) {
-          ITreeItemStore treeItemStore = this.treeItemStores[treeItem.id]!;
-          treeItemStore.setVisible(true);
-          treeItemStore.setCanToggleExpand(true);
-          treeItemStore.setExpanded(true);
-        }
-      }
-
-      this.dispatchIsLoading(false);
-    } catch (exception) {
-      throw Exception("Fail in listen(): $exception");
-    }
-  }
-
-  /// Item atende a algum filtro?
-  @override
-  bool treeItemMeetsAnyFilter(ITreeItemStore treeItemStore) {
-    try {
-      List<AssetFilter> filters = this.selectedCustomFilters.toList();
-      if (this.textSearchFilter.textSearch.isNotEmpty) {
-        filters.add(this.textSearchFilter);
-      }
-
-      bool meets = filters.isEmpty ||
-          filters.all((filter) => filter.meets(treeItemStore.treeItem));
-
-      return meets;
-    } on Exception catch (exception) {
-      throw Exception("Fail in treeItemMeetsAnyFilter(): $exception");
-    }
-  }
-
-  /// Aplicar filtro bottom-up para definir visibilidade
-  void setDescendantsVisible(ITreeItemStore treeItemStore) {
-    try {
-      if (treeItemStore.visible) return;
-
-      treeItemStore.setExpanded(true);
-      treeItemStore.setCanToggleExpand(false);
-      treeItemStore.setVisible(true);
-
-      TreeItem? parentTreeItem = treeItemStore.treeItem.parent;
-      if (parentTreeItem != null) {
-        ITreeItemStore parentTreeItemStore =
-            this.treeItemStores[parentTreeItem.id]!;
-        this.setDescendantsVisible(parentTreeItemStore);
-      }
-    } on Exception catch (exception) {
-      throw Exception("Fail in setDescendantsVisible(): $exception");
-    }
-  }
-
   // #endregion
 
   // #region Members 'Locations' :: locationsService, locations
@@ -243,14 +204,6 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
   @action
   Future<void> onTextSearchFilterChanged(String value) async {
     try {
-      // // Finaliza o isolate anterior, se existir
-      // isolate?.kill(priority: Isolate.immediate);
-
-      // // Inicia um novo isolate com a tarefa de processamento
-      // final isolateModel = IsolateModel(value, receivePort.sendPort);
-      // isolate =
-      //     await Isolate.spawn<IsolateModel>(executeFiltersTask, isolateModel);
-
       this.textSearchFilter = TextSearchFilter(textSearch: value);
       this.refreshAssetsTree();
     } catch (exception) {

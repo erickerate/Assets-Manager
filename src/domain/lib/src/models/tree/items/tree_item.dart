@@ -33,6 +33,12 @@ class TreeItem {
 
   /// Nível
   int get level {
+    // Tenta primeiro pela coleção de ascendentes
+    if (this.ascendants.isNotEmpty) {
+      return this.ascendants.length + 1;
+    }
+
+    // Se a coleção de ascendentes ainda não tiver definida usa a recursividade
     if (this.parent != null) {
       return this.parent!.level + 1;
     }
@@ -56,6 +62,13 @@ class TreeItem {
 
   /// Pai
   TreeItem? parent;
+
+  // #endregion
+
+  // #region Members 'Ascendants' :: ascendants
+
+  /// Ascendants
+  List<TreeItem> ascendants = <TreeItem>[];
 
   // #endregion
 

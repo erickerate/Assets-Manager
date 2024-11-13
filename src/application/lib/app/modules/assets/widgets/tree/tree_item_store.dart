@@ -3,9 +3,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 part 'tree_item_store.g.dart';
 
-class TreeItemStore = _TreeItemStoreBase with _$TreeItemStore;
+class TreeItemStore = TreeItemStoreBase with _$TreeItemStore;
 
-abstract class _TreeItemStoreBase with Store implements ITreeItemStore {
+abstract class TreeItemStoreBase with Store implements ITreeItemStore {
   // #region Members 'Store' :: assetsStore
 
   /// Controlador

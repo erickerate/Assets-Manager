@@ -14,12 +14,13 @@ abstract class IAssetsStore implements StoreBase {
 
   // #endregion
 
-  // #region Members 'Isolate' ::
+  // #region Members 'Isolate' :: listen(), isolate, receivePort
 
   /// Ouvir
   void listen(dynamic data);
 
   Isolate? isolate;
+
   final ReceivePort receivePort = ReceivePort();
 
   // #endregion
@@ -34,9 +35,6 @@ abstract class IAssetsStore implements StoreBase {
 
   /// Atualizar
   Future<void> refreshAssetsTree();
-
-  /// Item atende algum filtro?
-  bool treeItemMeetsAnyFilter(ITreeItemStore treeItemStore);
 
   // #endregion
 

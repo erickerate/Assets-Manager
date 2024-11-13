@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:darq/darq.dart';
 import 'package:domain/domain.dart';
 import 'package:test/test.dart';
 
@@ -99,27 +96,4 @@ void main() {
       expect(asset.status, json["status"]);
     });
   });
-}
-
-/// Validar hierarquia dos itens
-bool validateAssetsTreeHierarchy(List<TreeItem> treeItems) {
-  for (TreeItem treeItem in treeItems) {
-    bool isValid = validateTreeItemHierarchy(treeItem);
-    if (!isValid) return false;
-  }
-
-  return true;
-}
-
-/// Validar hierarquia do item
-bool validateTreeItemHierarchy(TreeItem treeItem) {
-  for (TreeItem child in treeItem.children) {
-    if (child.parent != treeItem) return false;
-
-    if (!validateTreeItemHierarchy(child)) {
-      return false;
-    }
-  }
-
-  return true;
 }
