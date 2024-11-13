@@ -38,7 +38,7 @@ class _TreeItemsViewState extends State<TreeItemsView> {
   /// Ao atualizar
   Future<void> onRefresh() async {
     try {
-      await this.controller.getAssets();
+      await this.controller.buildTreeAssets();
     } catch (exception) {
       throw Exception("Fail in onRefreshing(): $exception");
     }
@@ -51,10 +51,16 @@ class _TreeItemsViewState extends State<TreeItemsView> {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
+      List<ITreeItemStore> roots = this
+          .controller
+          .treeItemStores
+          .values
+          .where((w) => w.visible && w.treeItem.isRoot)
+          .toList();
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
         child: !this.controller.isLoading
-            ? this.controller.assetsTree.firstBorns.isEmpty
+            ? roots.isEmpty
                 ? const Center(
                     child: Text(
                       "Não há itens para serem exibidos",
@@ -64,16 +70,15 @@ class _TreeItemsViewState extends State<TreeItemsView> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: this.controller.assetsTree.firstBorns.length,
+                    itemCount: roots.length,
                     separatorBuilder: (context, index) {
                       return const Padding(padding: EdgeInsets.only(bottom: 4));
                     },
                     itemBuilder: (context, index) {
-                      TreeItem treeItem =
-                          this.controller.assetsTree.firstBorns[index];
+                      ITreeItemStore treeItemStore = roots[index];
                       return TreeItemView(
-                        key: Key(treeItem.id),
-                        treeItem: treeItem,
+                        key: Key(treeItemStore.treeItem.id),
+                        treeItemStore: treeItemStore,
                       );
                     },
                   )

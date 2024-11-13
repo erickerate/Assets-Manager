@@ -7,6 +7,8 @@ import 'package:domain/domain.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:service/service.dart';
 
+import 'widgets/tree/tree_item_store.dart';
+
 class AssetsModule extends Module {
   AssetsModule();
 
@@ -28,6 +30,7 @@ class AssetsModule extends Module {
       repository: i.get<IRepository<Location>>(),
     ));
 
+    i.add<ITreeItemStore>(TreeItemStore.new);
     i.addSingleton<IAssetsStore>(AssetsStore.new);
   }
 

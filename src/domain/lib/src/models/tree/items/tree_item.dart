@@ -14,7 +14,7 @@ class TreeItem {
 
   // #endregion
 
-  // #region Members 'Header' :: id, parentId, description, type, level
+  // #region Members 'Header' :: id, parentId, description, type, level, isRoot, toString()
 
   /// Identificador
   final String id;
@@ -28,6 +28,9 @@ class TreeItem {
   /// Tipo
   final String type;
 
+  /// Visível?
+  bool visible = true;
+
   /// Nível
   int get level {
     if (this.parent != null) {
@@ -37,9 +40,9 @@ class TreeItem {
     return 1;
   }
 
-  /// É primeiro nível?
-  bool get isFirstLevel {
-    return this.level == 1;
+  /// É raíz?
+  bool get isRoot {
+    return this.parentId == null;
   }
 
   @override

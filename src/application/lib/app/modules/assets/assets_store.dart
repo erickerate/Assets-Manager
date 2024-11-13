@@ -1,3 +1,7 @@
+import 'dart:isolate';
+
+import 'package:application/app/modules/assets/isolates/apply_filters_isolate.dart';
+import 'package:darq/darq.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -17,6 +21,16 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
   // #endregion
 
+  // #region Members 'Isolate' ::
+
+  @override
+  Isolate? isolate;
+
+  @override
+  final ReceivePort receivePort = ReceivePort();
+
+  // #endregion
+
   // #region Members 'Assets' :: assetsService, assets, getAssets()
 
   /// Serviço de recursos
@@ -28,32 +42,44 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
   @observable
   late List<Asset> assets;
 
-  /// Buscar ativos
+  // #endregion
+
+  // #region Members 'Assets Tree' :: treeItemStores, assetsTree, buildTreeAssets(), refreshAssetsTree(), expandedTreeItems(), toggleExpandedItem()
+
+  /// Itens
+  @override
+  @observable
+  late Map<String, ITreeItemStore> treeItemStores = <String, ITreeItemStore>{};
+
+  /// Construir árvore de ativos
   @override
   @action
-  Future<void> getAssets() async {
+  Future<void> buildTreeAssets() async {
     try {
       this.dispatchIsLoading(true);
 
+      Map<String, ITreeItemStore> treeItemStores = <String, ITreeItemStore>{};
       this.assets = await this.assetsService.getAll();
       this.locations = await this.locationsService.getAll();
 
-      await this.refreshAssetsTree();
+      AssetsTree assetsTree =
+          this.assetsService.buildAssetsTree(this.assets, this.locations);
+      for (TreeItem treeItem in assetsTree.allItems) {
+        ITreeItemStore treeItemStore = Modular.get<ITreeItemStore>();
+        treeItemStore.treeItem = treeItem;
+        treeItemStores.putIfAbsent(
+          treeItem.id,
+          () => treeItemStore,
+        );
+      }
+
+      this.treeItemStores = treeItemStores;
 
       this.dispatchIsLoading(false);
     } catch (exception) {
-      throw Exception('Fail in getAssets(): $exception');
+      throw Exception('Fail in buildTreeAssets(): $exception');
     }
   }
-
-  // #endregion
-
-  // #region Members 'Assets Tree' :: assetsTree, refreshAssetsTree(), expandedTreeItems(), toggleExpandedItem()
-
-  /// Árvore
-  @override
-  @observable
-  late AssetsTree assetsTree;
 
   /// Atualizar
   @override
@@ -64,48 +90,96 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
       await Future.delayed(const Duration(seconds: 1));
 
+      // Reset
+      bool mustMaintainRootsVisible = !this.hasFilters;
+      for (ITreeItemStore treeItemStore in this.treeItemStores.values) {
+        bool visible =
+            mustMaintainRootsVisible && treeItemStore.treeItem.isRoot;
+        treeItemStore.setVisible(visible);
+        treeItemStore.setCanToggleExpand(true);
+        treeItemStore.setExpanded(false);
+      }
+      if (!this.hasFilters) {
+        this.dispatchIsLoading(false);
+        return;
+      }
+
+      // Finaliza o isolate anterior, se existir
+      isolate?.kill(priority: Isolate.immediate);
+
+      // Inicia um novo isolate com a tarefa de processamento
+      List<AssetFilter> filters = this.selectedCustomFilters.toList();
+      if (this.textSearchFilter.textSearch.isNotEmpty) {
+        filters.add(this.textSearchFilter);
+      }
+      final isolateModel = IsolateModel(
+        this.treeItemStores.values.map((m) => m.treeItem).toList(),
+        filters,
+        receivePort.sendPort,
+      );
+      isolate =
+          await Isolate.spawn<IsolateModel>(executeFiltersTask, isolateModel);
+    } catch (exception) {
+      this.dispatchIsLoading(false);
+      throw Exception('Fail in refreshAssetsTree(): $exception');
+    }
+  }
+
+  @override
+  void listen(dynamic data) {
+    try {
+      if (data is List<TreeItem>) {
+        List<TreeItem> visibleTreeItems = data;
+
+        for (TreeItem treeItem in visibleTreeItems) {
+          ITreeItemStore treeItemStore = this.treeItemStores[treeItem.id]!;
+          treeItemStore.setVisible(true);
+          treeItemStore.setCanToggleExpand(true);
+          treeItemStore.setExpanded(true);
+        }
+      }
+
+      this.dispatchIsLoading(false);
+    } catch (exception) {
+      throw Exception("Fail in listen(): $exception");
+    }
+  }
+
+  /// Item atende a algum filtro?
+  @override
+  bool treeItemMeetsAnyFilter(ITreeItemStore treeItemStore) {
+    try {
       List<AssetFilter> filters = this.selectedCustomFilters.toList();
       if (this.textSearchFilter.textSearch.isNotEmpty) {
         filters.add(this.textSearchFilter);
       }
 
-      this.assetsTree = AssetsTree(
-        locations: this.locations,
-        assets: this.assets,
-        filters: filters,
-      );
-      await this.assetsTree.build();
+      bool meets = filters.isEmpty ||
+          filters.all((filter) => filter.meets(treeItemStore.treeItem));
 
-      this.expandedTreeItems =
-          this.hasFilters ? this.assetsTree.allTreeItems : [];
-
-      this.dispatchIsLoading(false);
-    } catch (exception) {
-      throw Exception('Fail in refreshAssetsTree(): $exception');
+      return meets;
+    } on Exception catch (exception) {
+      throw Exception("Fail in treeItemMeetsAnyFilter(): $exception");
     }
   }
 
-  /// Itens expandidos
-  @override
-  @observable
-  List<TreeItem> expandedTreeItems = <TreeItem>[];
-
-  /// Alternar item expandido
-  @override
-  @action
-  void toggleExpandedItem(TreeItem treeItem) {
+  /// Aplicar filtro bottom-up para definir visibilidade
+  void setDescendantsVisible(ITreeItemStore treeItemStore) {
     try {
-      List<TreeItem> treeItems = this.expandedTreeItems.toList();
+      if (treeItemStore.visible) return;
 
-      if (treeItems.contains(treeItem)) {
-        treeItems.remove(treeItem);
-      } else {
-        treeItems.add(treeItem);
+      treeItemStore.setExpanded(true);
+      treeItemStore.setCanToggleExpand(false);
+      treeItemStore.setVisible(true);
+
+      TreeItem? parentTreeItem = treeItemStore.treeItem.parent;
+      if (parentTreeItem != null) {
+        ITreeItemStore parentTreeItemStore =
+            this.treeItemStores[parentTreeItem.id]!;
+        this.setDescendantsVisible(parentTreeItemStore);
       }
-
-      this.expandedTreeItems = treeItems.toList();
     } on Exception catch (exception) {
-      throw Exception("Fail in toggleExpandedItem(): $exception");
+      throw Exception("Fail in setDescendantsVisible(): $exception");
     }
   }
 
@@ -169,6 +243,14 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
   @action
   Future<void> onTextSearchFilterChanged(String value) async {
     try {
+      // // Finaliza o isolate anterior, se existir
+      // isolate?.kill(priority: Isolate.immediate);
+
+      // // Inicia um novo isolate com a tarefa de processamento
+      // final isolateModel = IsolateModel(value, receivePort.sendPort);
+      // isolate =
+      //     await Isolate.spawn<IsolateModel>(executeFiltersTask, isolateModel);
+
       this.textSearchFilter = TextSearchFilter(textSearch: value);
       this.refreshAssetsTree();
     } catch (exception) {

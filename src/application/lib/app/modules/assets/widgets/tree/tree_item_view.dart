@@ -10,15 +10,15 @@ class TreeItemView extends StatefulWidget {
   /// Componente de visualização para item da árvore
   const TreeItemView({
     super.key,
-    required this.treeItem,
+    required this.treeItemStore,
   });
 
   // #endregion
 
-  // #region Members 'Parameters' :: treeItem
+  // #region Members 'Parameters' :: treeItemId
 
-  /// Item da árvore
-  final TreeItem treeItem;
+  /// Id
+  final ITreeItemStore treeItemStore;
 
   // #endregion
 
@@ -27,10 +27,10 @@ class TreeItemView extends StatefulWidget {
 }
 
 class _TreeItemViewState extends State<TreeItemView> {
-  // #region Members 'Store' :: controller
+  // #region Members 'Store' :: assetsStore
 
   /// Controlador
-  final controller = Modular.get<IAssetsStore>();
+  final assetsStore = Modular.get<IAssetsStore>();
 
   // #endregion
 
@@ -38,24 +38,29 @@ class _TreeItemViewState extends State<TreeItemView> {
 
   @override
   Widget build(BuildContext context) {
-    ComponentTreeItem? componentTreeItem =
-        (this.widget.treeItem is ComponentTreeItem)
-            ? this.widget.treeItem as ComponentTreeItem
-            : null;
-
-    TreeItemWithStatus? treeItemWithStatus =
-        (this.widget.treeItem is TreeItemWithStatus)
-            ? this.widget.treeItem as TreeItemWithStatus
-            : null;
-
-    Color lineColor = const Color(0xFFD8DFE6);
     return Observer(
       builder: (context) {
-        bool treeItemIsExpanded =
-            this.controller.expandedTreeItems.contains(this.widget.treeItem);
+        Color lineColor = const Color(0xFFD8DFE6);
+        ITreeItemStore treeItemStore = this.widget.treeItemStore;
+        TreeItem treeItem = treeItemStore.treeItem;
+        bool expanded = treeItemStore.expanded;
+        bool canToggleExpand = treeItemStore.canToggleExpand;
+
+        // Filhos
+        List<TreeItem> children = treeItem.children;
+        List<ITreeItemStore> treeItemStoreChildren = children
+            .map((child) => this.assetsStore.treeItemStores[child.id]!)
+            .toList();
+
+        ComponentTreeItem? componentTreeItem =
+            (treeItem is ComponentTreeItem) ? treeItem : null;
+        TreeItemWithStatus? treeItemWithStatus =
+            (treeItem is TreeItemWithStatus) ? treeItem : null;
+
         return Container(
           padding: EdgeInsets.zero,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               // #region Item
 
@@ -67,10 +72,9 @@ class _TreeItemViewState extends State<TreeItemView> {
                   children: [
                     // #region Ligações
 
-                    ...List.generate(this.widget.treeItem.level - 1, (index) {
+                    ...List.generate(treeItem.level - 1, (index) {
                       bool isFirstLevel = index == 0;
-                      bool isLastLevel =
-                          index == this.widget.treeItem.level - 2;
+                      bool isLastLevel = index == treeItem.level - 2;
                       bool hasPointer = isLastLevel;
                       double paddingLeft = isFirstLevel ? 11 : 25;
                       return Stack(
@@ -116,29 +120,30 @@ class _TreeItemViewState extends State<TreeItemView> {
 
                     // #region Expandir filhos
 
-                    if (this.widget.treeItem.children.isNotEmpty) ...[
+                    if (treeItem.children.isNotEmpty) ...[
                       Container(
                         height: 24,
                         width: 24,
                         margin: EdgeInsets.only(
-                          left: this.widget.treeItem.isFirstLevel ? 0 : 5,
+                          left: treeItem.isRoot ? 0 : 5,
                         ),
                         child: IconButton(
                           visualDensity: VisualDensity.compact,
                           padding: EdgeInsets.zero,
                           icon: Icon(
-                            treeItemIsExpanded
+                            expanded
                                 ? Icons.keyboard_arrow_down
                                 : Icons.keyboard_arrow_right,
-                            color: Colors.black,
+                            color: canToggleExpand
+                                ? Colors.black
+                                : const Color(0xFF77818C),
                             size: 24,
                           ),
                           onPressed: () {
-                            if (this.controller.hasFilters) return;
-
-                            this
-                                .controller
-                                .toggleExpandedItem(this.widget.treeItem);
+                            treeItemStore.setExpanded(
+                              !treeItemStore.expanded,
+                              setChildrenVisibility: true,
+                            );
                           },
                         ),
                       ),
@@ -153,14 +158,11 @@ class _TreeItemViewState extends State<TreeItemView> {
                       height: 24,
                       width: 24,
                       margin: EdgeInsets.only(
-                        left: this.widget.treeItem.hasChildren ||
-                                this.widget.treeItem.isFirstLevel
-                            ? 1.5
-                            : 7,
+                        left: treeItem.hasChildren || treeItem.isRoot ? 1.5 : 7,
                       ),
                       child: Center(
                         child: Image.asset(
-                          "assets/images/${this.widget.treeItem.type}.png",
+                          "assets/images/${treeItem.type}.png",
                           height: 24,
                           width: 24,
                         ),
@@ -175,7 +177,7 @@ class _TreeItemViewState extends State<TreeItemView> {
 
                     Flexible(
                       child: Text(
-                        this.widget.treeItem.description,
+                        treeItem.description,
                         style: const TextStyle(
                           overflow: TextOverflow.ellipsis,
                           fontSize: 14,
@@ -217,12 +219,20 @@ class _TreeItemViewState extends State<TreeItemView> {
 
               // #region Filhos
 
-              if (treeItemIsExpanded) ...[
-                ...this
-                    .widget
-                    .treeItem
-                    .children
-                    .map((treeItem) => TreeItemView(treeItem: treeItem)),
+              if (expanded) ...[
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: treeItemStoreChildren.length,
+                  itemBuilder: (context, index) {
+                    ITreeItemStore treeItemStore = treeItemStoreChildren[index];
+
+                    return Visibility(
+                      visible: treeItemStore.visible,
+                      child: TreeItemView(treeItemStore: treeItemStore),
+                    );
+                  },
+                ),
               ],
 
               // #endregion

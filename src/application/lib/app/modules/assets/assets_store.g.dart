@@ -37,39 +37,23 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
     });
   }
 
-  late final _$assetsTreeAtom =
-      Atom(name: 'AssetsStoreBase.assetsTree', context: context);
+  late final _$treeItemStoresAtom =
+      Atom(name: 'AssetsStoreBase.treeItemStores', context: context);
 
   @override
-  AssetsTree get assetsTree {
-    _$assetsTreeAtom.reportRead();
-    return super.assetsTree;
+  Map<String, ITreeItemStore> get treeItemStores {
+    _$treeItemStoresAtom.reportRead();
+    return super.treeItemStores;
   }
 
-  bool _assetsTreeIsInitialized = false;
+  bool _treeItemStoresIsInitialized = false;
 
   @override
-  set assetsTree(AssetsTree value) {
-    _$assetsTreeAtom.reportWrite(
-        value, _assetsTreeIsInitialized ? super.assetsTree : null, () {
-      super.assetsTree = value;
-      _assetsTreeIsInitialized = true;
-    });
-  }
-
-  late final _$expandedTreeItemsAtom =
-      Atom(name: 'AssetsStoreBase.expandedTreeItems', context: context);
-
-  @override
-  List<TreeItem> get expandedTreeItems {
-    _$expandedTreeItemsAtom.reportRead();
-    return super.expandedTreeItems;
-  }
-
-  @override
-  set expandedTreeItems(List<TreeItem> value) {
-    _$expandedTreeItemsAtom.reportWrite(value, super.expandedTreeItems, () {
-      super.expandedTreeItems = value;
+  set treeItemStores(Map<String, ITreeItemStore> value) {
+    _$treeItemStoresAtom.reportWrite(
+        value, _treeItemStoresIsInitialized ? super.treeItemStores : null, () {
+      super.treeItemStores = value;
+      _treeItemStoresIsInitialized = true;
     });
   }
 
@@ -142,12 +126,12 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
     });
   }
 
-  late final _$getAssetsAsyncAction =
-      AsyncAction('AssetsStoreBase.getAssets', context: context);
+  late final _$buildTreeAssetsAsyncAction =
+      AsyncAction('AssetsStoreBase.buildTreeAssets', context: context);
 
   @override
-  Future<void> getAssets() {
-    return _$getAssetsAsyncAction.run(() => super.getAssets());
+  Future<void> buildTreeAssets() {
+    return _$buildTreeAssetsAsyncAction.run(() => super.buildTreeAssets());
   }
 
   late final _$refreshAssetsTreeAsyncAction =
@@ -186,26 +170,11 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
         .run(() => super.dispatchIsLoading(isLoading));
   }
 
-  late final _$AssetsStoreBaseActionController =
-      ActionController(name: 'AssetsStoreBase', context: context);
-
-  @override
-  void toggleExpandedItem(TreeItem treeItem) {
-    final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
-        name: 'AssetsStoreBase.toggleExpandedItem');
-    try {
-      return super.toggleExpandedItem(treeItem);
-    } finally {
-      _$AssetsStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
   @override
   String toString() {
     return '''
 assets: ${assets},
-assetsTree: ${assetsTree},
-expandedTreeItems: ${expandedTreeItems},
+treeItemStores: ${treeItemStores},
 locations: ${locations},
 selectedCustomFilters: ${selectedCustomFilters},
 textSearchFilter: ${textSearchFilter},

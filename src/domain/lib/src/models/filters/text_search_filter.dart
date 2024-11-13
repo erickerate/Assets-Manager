@@ -30,9 +30,7 @@ class TextSearchFilter extends AssetFilter {
     try {
       String textSearch = this.textSearch.toLowerCase();
 
-      List<String> terms = <String>[treeItem.description, treeItem.type];
-
-      bool meets = terms.any((term) => term.toLowerCase().contains(textSearch));
+      bool meets = treeItem.description.toLowerCase().contains(textSearch);
 
       return meets;
     } on Exception catch (exception) {

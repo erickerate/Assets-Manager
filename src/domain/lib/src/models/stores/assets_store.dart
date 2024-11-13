@@ -1,8 +1,10 @@
+import 'dart:isolate';
+
 import 'package:domain/domain.dart';
 
 /// Interface para loja de ativos
 abstract class IAssetsStore implements StoreBase {
-  // #region Members 'Assets' :: assetsService, assets, getAssets()
+  // #region Members 'Assets' :: assetsService, assets
 
   /// Serviço de recursos
   late AssetsServiceBase assetsService;
@@ -10,24 +12,31 @@ abstract class IAssetsStore implements StoreBase {
   /// Ativos
   late List<Asset> assets;
 
-  /// Buscar ativos
-  Future<void> getAssets();
+  // #endregion
+
+  // #region Members 'Isolate' ::
+
+  /// Ouvir
+  void listen(dynamic data);
+
+  Isolate? isolate;
+  final ReceivePort receivePort = ReceivePort();
 
   // #endregion
 
-  // #region Members 'Assets Tree' :: assetsTree, expandedTreeItems, toggleExpandedItem, refreshAssetsTree()
+  // #region Members 'Assets Tree' :: treeItemStores, buildTreeAssets(), refreshAssetsTree()
 
-  /// Árvore
-  late AssetsTree assetsTree;
+  /// Itens
+  Map<String, ITreeItemStore> treeItemStores = <String, ITreeItemStore>{};
 
-  /// Itens expandidos
-  late List<TreeItem> expandedTreeItems;
-
-  /// Alternar item expandido
-  void toggleExpandedItem(TreeItem treeItem);
+  /// Construir árvore de ativos
+  Future<void> buildTreeAssets();
 
   /// Atualizar
   Future<void> refreshAssetsTree();
+
+  /// Item atende algum filtro?
+  bool treeItemMeetsAnyFilter(ITreeItemStore treeItemStore);
 
   // #endregion
 

@@ -1,9 +1,14 @@
+import 'dart:isolate';
+
+import 'package:application/app/modules/assets/assets_store.dart';
 import 'package:application/app/modules/assets/widgets/filters/asset_state_filters_widget.dart';
 import 'package:application/app/modules/assets/widgets/tree/tree_items_view.dart';
 import 'package:application/app/widgets/text_box_widget.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import 'isolates/apply_filters_isolate.dart';
 
 class AssetsView extends StatefulWidget {
   const AssetsView({super.key});
@@ -19,6 +24,12 @@ class _AssetsViewState extends State<AssetsView> {
   void initState() {
     try {
       super.initState();
+
+      // Escuta o ReceivePort para receber o resultado do isolate
+      Modular.get<IAssetsStore>()
+          .receivePort
+          .listen(Modular.get<IAssetsStore>().listen);
+
       WidgetsBinding.instance.addPostFrameCallback((_) async {});
     } catch (exception) {
       throw Exception("Fail in initState(): $exception");
@@ -65,6 +76,10 @@ class _AssetsViewState extends State<AssetsView> {
         leading: BackButton(
           color: Colors.white,
           onPressed: () async {
+            Modular.get<IAssetsStore>()
+                .isolate
+                ?.kill(priority: Isolate.immediate);
+            Modular.get<IAssetsStore>().receivePort.close();
             Modular.to.pop();
           },
         ),

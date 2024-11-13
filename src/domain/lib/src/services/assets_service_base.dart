@@ -2,8 +2,14 @@ import 'package:domain/domain.dart';
 
 /// Serviço abstrato para recursos
 abstract class AssetsServiceBase extends ServiceBase<Asset> {
+  // #region Members 'Owner' :: company
+
   /// Empresa
   Company get company;
+
+  // #endregion
+
+  // #region Members 'Filters' :: customFilters
 
   /// Filtros customizados
   List<AssetFilter> get customFilters {
@@ -17,4 +23,69 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
   }
 
   List<AssetFilter>? _customfilters;
+
+  // #endregion
+
+  // #region Members 'Tree' :: buildAssetsTree()
+
+  /// Construir árvore de ativos
+  AssetsTree buildAssetsTree(List<Asset> assets, List<Location> locations) {
+    try {
+      // #region 1. Cria itens Localizações / Recursos
+
+      AssetsTree assetsTree = AssetsTree();
+      TreeItem treeItem;
+      DateTime start = DateTime.now();
+      Map<String, TreeItem> map = <String, TreeItem>{};
+
+      // Localizações
+      for (Location location in locations) {
+        treeItem = TreeItem.fromLocation(location);
+        map.putIfAbsent(location.id!, () => treeItem);
+      }
+
+      // Ativos
+      for (Asset asset in assets) {
+        treeItem = TreeItem.fromAsset(asset);
+        map.putIfAbsent(asset.id!, () => treeItem);
+      }
+
+      DateTime end = DateTime.now();
+      print(
+        "Passo 1: Criar itens Localizações/Recursos (${end.difference(start).inSeconds} s)",
+      );
+
+      // #endregion
+
+      // #region 1. Constrói estrutura
+
+      start = DateTime.now();
+
+      TreeItem parentTreeItem;
+      for (TreeItem treeItem in map.values) {
+        assetsTree.allItems.add(treeItem);
+
+        if (treeItem.parentId == null) {
+          assetsTree.roots.add(treeItem);
+        } else {
+          parentTreeItem = map[treeItem.parentId]!;
+          parentTreeItem.addChild(treeItem);
+          treeItem.parent = parentTreeItem;
+        }
+      }
+
+      end = DateTime.now();
+      print(
+        "Passo 3: Constrói estrutura (${end.difference(start).inSeconds} s)",
+      );
+
+      return assetsTree;
+
+      // #endregion
+    } on Exception catch (exception) {
+      throw Exception("Fail in buildAssetsTree(): $exception");
+    }
+  }
+
+  // #endregion
 }
