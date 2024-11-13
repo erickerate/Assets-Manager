@@ -5,10 +5,42 @@ Implementação de uma aplicação mobile para gestão de ativos industriais uti
 
 Abaixo você encontra screenshots das principais telas do aplicativo.
 
-#### Aplicação (v.10.11.2024)
+#### Aplicação (v.13.11.2024)
 ![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/app-overview.png)
 
-#### Trabalhos futuros
+## Algoritmos de Construção e Filtragem da Árvore
+
+#### Construção da Árvore 
+
+Para construir a árvore de forma eficiente, utilizou-se a estrutura de dados Map baseada em pares chave/valor. O Map permite uma construção direta da árvore, associando cada item da lista a um nó específico através de um par id -> TreeItem. Dessa forma, pode-se acessar rapidamente qualquer nó dentro da estrutura em árvore sem precisar iterar sobre os itens repetidamente.
+
+- Passo 1: Inicializar um Map, onde cada chave é o id do item e o valor é o item correspondente (TreeItem).
+- Passo 2: Iterar sobre a lista de itens, e para cada item, busca-se seu pai diretamente no Map utilizando treeItem.parentId.
+- Passo 3: Se o item não possui parentId, ele é definido como a raiz da árvore. Caso contrário, é adicionado como filho do nó pai correspondente.
+
+Este método reduz a complexidade do algoritmo para O(n), já que acessamos cada nó diretamente e o conectamos ao pai de forma eficiente.
+
+
+#### Filtragem da Árvore
+
+Para aplicar os filtros, foi adotada uma abordagem que exibe os itens que atendem aos critérios dos filtros, juntamente com seus elementos ascendentes até a raiz, de modo a exibir toda a hierarquia dos itens. O algoritmo de filtragem é implementado da seguinte forma:
+
+- Passo 1: Os filtros são aplicados para obter apenas os itens correspondentes. Define-se cada item desta coleção como “visível”.
+- Passo 2: Cada item possui a coleção consolidada de itens descendentes e filhos. Neste caso, percorre-se a coleção de itens descendentes marcando-os como "visíveis".
+
+Como a árvore representa os ativos industriais e, neste contexto, a árvore não necessarimente estará balanceada, a complexidade deste algoritmo se aproxima de O(n). 
+
+
+#### Processamento com Isolates
+
+Para evitar travamentos durante a aplicação de filtros em árvores muito grandes, utilizou-se Isolates para que a operação de filtragem seja processada em uma thread separada, liberando a UI principal e garantindo uma navegação fluida. O uso desta técnica permite que o app mantenha uma performance estável, mesmo em cenários onde a quantidade de ativos é elevada.
+
+#### Construção UI da listagem em árvore com ListView.builder
+
+Para evitar problemas de desempenho, especialmente ao lidar com listas de ativos grandes, ListView.builder foi implementado em todos os níveis da árvore para renderiza-la de forma eficiente. Esse componente carrega apenas os itens visíveis no momento, diferentemente de ListView simples, que renderiza todos os itens de uma vez. Essa abordagem ajuda a manter o uso de memória e o tempo de renderização baixos, proporcionando uma experiência de navegação mais fluida.
+
+
+## Trabalhos futuros
 
 1. **Autenticação e Controle de Acesso**: Implementar a autenticação do usuário e controle de acesso para limitar quais recursos podem ser visualizados ou editados. Isso seria útil para ambientes com diferentes níveis hierárquicos de segurança e controle.
 2. **Notificações em Tempo Real**: Implementar um sistema de notificações para alertar o usuário sobre mudanças críticas nos ativos. Esse recurso poderia ser integrado via push notifications ou WebSocket, garantindo que o usuário sempre receba as informações mais recentes, mesmo estando fora do aplicativo.
