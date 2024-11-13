@@ -28,7 +28,7 @@ Para aplicar os filtros, foi adotada uma abordagem que exibe os itens que atende
 - Passo 1: Os filtros são aplicados para obter apenas os itens correspondentes. Define-se cada item desta coleção como “visível”.
 - Passo 2: Cada item possui a coleção consolidada de itens ascendentes e filhos. Neste caso, percorre-se a coleção de itens ascendentes marcando-os como "visíveis".
 
-Como a árvore representa os ativos industriais e, neste contexto, a árvore não necessarimente estará balanceada, a complexidade deste algoritmo se aproxima de O(n). 
+Como a árvore representa os ativos industriais, não necessariamente estará balanceada. Neste cenário, a complexidade desse algoritmo aproxima-se de O(n).
 
 
 #### Processamento com Isolates
