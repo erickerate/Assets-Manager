@@ -12,11 +12,11 @@ Abaixo você encontra screenshots das principais telas do aplicativo.
 
 #### Construção da Árvore 
 
-Para construir a árvore de forma eficiente, utilizou-se uma estrutura de dados Mapa baseada em pares chave/valor, permitindo uma construção direta da árvore ao associar cada ativo da lista a um nó específico por meio de um par id -> TreeItem. Cada item armazena referências diretas tanto aos seus filhos de primeiro nível quanto a seus ascendentes até a raiz da árvore. Isso permite o acesso rápido a qualquer nó da estrutura, sem a necessidade de iterações repetidas, além de facilitar o acesso direto aos filhos e ascendetes de cada item, otimizando as operações de construção e filtragem da árvore. Esse algoritmo pode ser chamado de **Algoritmo de Construção de árvore hierárquica com mapeamento direto baseada em hash e compressão de caminhos**.
+Para construir a árvore de forma eficiente, utilizou-se uma estrutura de dados Mapa baseada em pares chave/valor, permitindo uma construção direta da árvore ao associar cada ativo da lista a um nó específico por meio de um par id -> TreeItem. Cada item armazena referências diretas tanto aos seus filhos de primeiro nível quanto a seus ascendentes até a raiz da árvore. Isso permite o acesso rápido a qualquer nó da estrutura, sem a necessidade de iterações repetidas, além de facilitar o acesso direto aos filhos e ascendentes de cada item, otimizando as operações de construção e filtragem da árvore. Esse algoritmo pode ser chamado de **Algoritmo de Construção de árvore hierárquica com mapeamento direto baseada em hash e compressão de caminhos**.
 
 1. **Inicialização dos Nós e do Mapa**: Crie um Mapa dos itens, onde cada chave representa o id do item e o valor é o item correspondente (TreeItem). Para cada ativo na lista, instancie um TreeItem e adicione-o ao mapa, utilizando o id do item como chave.
 2. **Construção da Hierarquia da Árvore**: Para cada item, casso possua um pai, obtenha-o diretamente através do mapa e adicione o item à coleção de filhos desse pai. Se o item não tiver pai, adicione-o à coleção de raízes da árvore.
-3. **Consolidação dos Ascendentes**: Caminhando da raiz até as extremidades da árvore, defina para cada sua coleção de ascendentes como sendo a coleção de ascendentes do item pai, acrescida do próprio item.
+3. **Consolidação dos Ascendentes**: Caminhando da raiz até as extremidades da árvore, defina a coleção de ascendentes de cada item como sendo a coleção de ascendentes do item pai, acrescida do próprio item.
 
 Sendo assim, se há n itens para processar, e cada operação é feita em tempo constante O(1), a **complexidade assintótica geral da construção da árvore será O(n)**. 
 
