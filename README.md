@@ -12,32 +12,33 @@ Abaixo você encontra screenshots das principais telas do aplicativo.
 
 #### Construção da Árvore 
 
-Para construir a árvore de forma eficiente, utilizou-se a estrutura de dados Map baseada em pares chave/valor. O Map permite uma construção direta da árvore, associando cada item da lista a um nó específico através de um par id -> TreeItem. Dessa forma, pode-se acessar rapidamente qualquer nó dentro da estrutura em árvore sem precisar iterar sobre os itens repetidamente.
+Para construir a árvore de forma eficiente, utilizou-se uma estrutura de dados Mapa baseada em pares chave/valor, permitindo uma construção direta da árvore ao associar cada ativo da lista a um nó específico por meio de um par id -> TreeItem. Cada item armazena referências diretas tanto aos seus filhos de primeiro nível quanto a seus ascendentes até a raiz da árvore. Isso permite o acesso rápido a qualquer nó da estrutura, sem a necessidade de iterações repetidas, além de facilitar o acesso direto aos filhos e ascendetes de cada item, otimizando as operações de construção e filtragem da árvore. Esse algoritmo pode ser chamado de **Algoritmo de Construção de árvore hierárquica com mapeamento direto baseada em hash e compressão de caminhos**.
 
-- Passo 1: Inicializar um Map, onde cada chave é o id do item e o valor é o item correspondente (TreeItem).
-- Passo 2: Iterar sobre a lista de itens, e para cada item, busca-se seu pai diretamente no Map utilizando treeItem.parentId.
-- Passo 3: Se o item não possui parentId, ele é definido como a raiz da árvore. Caso contrário, é adicionado como filho do nó pai correspondente.
+1. **Inicialização dos Nós e do Mapa**: Crie um Mapa dos itens, onde cada chave representa o id do item e o valor é o item correspondente (TreeItem). Para cada ativo na lista, instancie um TreeItem e adicione-o ao mapa, utilizando o id do item como chave.
+2. **Construção da Hierarquia da Árvore**: Para cada item, casso possua um pai, obtenha-o diretamente através do mapa e adicione o item à coleção de filhos desse pai. Se o item não tiver pai, adicione-o à coleção de raízes da árvore.
+3. **Consolidação dos Ascendentes**: Caminhando da raiz até as extremidades da árvore, defina para cada sua coleção de ascendentes como sendo a coleção de ascendentes do item pai, acrescida do próprio item.
 
-Este método reduz a complexidade do algoritmo para O(n), já que acessamos cada nó diretamente e o conectamos ao pai de forma eficiente.
+Sendo assim, se há n itens para processar, e cada operação é feita em tempo constante O(1), a **complexidade assintótica geral da construção da árvore será O(n)**. 
+
 
 
 #### Filtragem da Árvore
 
 Para aplicar os filtros, foi adotada uma abordagem que exibe os itens que atendem aos critérios dos filtros, juntamente com seus elementos ascendentes até a raiz, de modo a exibir toda a hierarquia dos itens. O algoritmo de filtragem é implementado da seguinte forma:
 
-- Passo 1: Os filtros são aplicados para obter apenas os itens correspondentes. Define-se cada item desta coleção como “visível”.
-- Passo 2: Cada item possui a coleção consolidada de itens ascendentes e filhos. Neste caso, percorre-se a coleção de itens ascendentes marcando-os como "visíveis".
+1. **Definição dos itens que atendem aos filtros**: Aplique os filtros para obter apenas os itens correspondentes. Defina cada item desta coleção como visível.
+2. **Tornando visível os ascendentes**: Para cada item que atender aos filtros, percorra a coleção dos ascendentes marcando-os como visíveis.
 
-Como a árvore representa os ativos industriais, não necessariamente estará balanceada. Neste cenário, a complexidade desse algoritmo aproxima-se de O(n).
+Como o acesso aos itens e seus ascendentes é feita de forma direta, **a complexidade assintótica deste algoritmo aproxima-se de O(n)**.
 
 
-#### Processamento com Isolates
+#### Processamento de filtros com Isolates
 
 Para evitar travamentos durante a aplicação de filtros em árvores muito grandes, utilizou-se Isolates para que a operação de filtragem seja processada em uma thread separada, liberando a UI principal e garantindo uma navegação fluida. O uso desta técnica permite que o app mantenha uma performance estável, mesmo em cenários onde a quantidade de ativos é elevada.
 
-#### Construção UI da listagem em árvore com ListView.builder
+#### Virtualização da listagem de ativos com ListView.builder
 
-Para evitar problemas de desempenho, especialmente ao lidar com listas de ativos grandes, ListView.builder foi implementado em todos os níveis da árvore para renderiza-la de forma eficiente. Esse componente carrega apenas os itens visíveis no momento, diferentemente de ListView simples, que renderiza todos os itens de uma vez. Essa abordagem ajuda a manter o uso de memória e o tempo de renderização baixos, proporcionando uma experiência de navegação mais fluida.
+Para evitar problemas de desempenho, especialmente com listas extensas de ativos, o ListView.builder foi implementado em todos os níveis da árvore para renderiza-la de forma virtual. Esse componente carrega apenas os itens visíveis no momento, diferentemente de ListView simples, que renderiza todos os itens de uma vez. Essa abordagem aumenta a eficiência da aplicação mantendo o uso de memória e o tempo de renderização baixos, proporcionando uma experiência de navegação mais fluida.
 
 
 ## Trabalhos futuros
