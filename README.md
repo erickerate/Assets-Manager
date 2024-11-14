@@ -1,82 +1,106 @@
-# Assets-Manager
-Implementação de uma aplicação mobile para gestão de ativos industriais utilizando Flutter.
+<div align="center">
+   <h3 align="center">@Tractian Challenge 🧢</h3>
+   A high-performance mobile application for industrial asset management, designed to organize and visualize large volumes of complex data in a hierarchical tree structure.
+</div>
 
-## Visão geral do aplicativo
+## Application Overview
 
-Abaixo você encontra screenshots das principais telas do aplicativo.
+Below you will find screenshots of the main screens of the application.
 
-#### Aplicação (v.14.11.2024)
+#### Application (v.14.11.2024)
 ![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/app-overview.png)
 
-## Algoritmos de Construção e Filtragem da Árvore
+## Tree Construction and Filtering Algorithms
 
-#### Construção da Árvore 
+### Tree Construction
 
-Para construir a árvore de forma eficiente, utilizou-se uma estrutura de dados Mapa baseada em pares chave/valor, permitindo uma construção direta da árvore ao associar cada ativo da lista a um nó específico por meio de um par id -> TreeItem. Cada item armazena referências diretas tanto aos seus filhos de primeiro nível quanto a seus ascendentes até a raiz da árvore. Isso permite o acesso rápido a qualquer nó da estrutura, sem a necessidade de iterações repetidas, além de facilitar o acesso direto aos filhos e ascendentes de cada item, otimizando as operações de construção e filtragem da árvore. Esse algoritmo pode ser chamado de **Algoritmo de Construção de árvore hierárquica com mapeamento direto baseado em hash e compressão de caminhos**, sendo definido como a seguir: 
+To build the tree efficiently, a Map data structure based on key/value pairs was used, allowing a direct construction of the tree by associating each asset in the list with a specific node through an id -> TreeItem pair. Each item stores direct references to both its first-level children and its ancestors up to the root of the tree. This allows quick access to any node in the structure, without the need for repeated iterations, in addition to facilitating direct access to the children and ancestors of each item, optimizing the tree construction and filtering operations. This algorithm can be called **Hierarchical Tree Construction Algorithm with Direct Hash-Based Mapping and Path Compression**, and is defined as follows:
 
-1. **Inicialização dos Nós e do Mapa**: Crie um Mapa dos itens, onde cada chave representa o id do item e o valor é o item correspondente (TreeItem). Para cada ativo na lista, instancie um TreeItem e adicione-o ao mapa, utilizando o id do item como chave.
-2. **Construção da Hierarquia da Árvore**: Para cada item, casso possua um pai, obtenha-o diretamente através do mapa e adicione o item à coleção de filhos desse pai. Se o item não tiver pai, adicione-o à coleção de raízes da árvore.
-3. **Consolidação dos Ascendentes**: Caminhando da raiz até as extremidades da árvore, defina a coleção de ascendentes de cada item como sendo a coleção de ascendentes do item pai, acrescida do próprio item.
+1. **Initializing Nodes and Map**: Create a Map of items, where each key represents the item id and the value is the corresponding item (TreeItem). For each asset in the list, instantiate a TreeItem and add it to the map, using the item id as the key.
+2. **Building the Tree Hierarchy**: For each item, if it has a parent, get it directly through the map and add the item to the collection of children of that parent. If the item has no parent, add it to the collection of roots of the tree.
+3. **Consolidating the Ascendants**: Walking from the root to the ends of the tree, define the collection of ancestors of each item as the collection of ancestors of the parent item, plus the item itself.
 
-Sendo assim, se há n itens para processar, e cada operação é feita em tempo constante O(1), a **complexidade assintótica geral da construção da árvore será O(n)**. 
+Therefore, if there are n items to process, and each operation is done in constant time O(1), the overall asymptotic complexity of building the tree will be O(n).
 
+### Tree Filtering
 
+To apply the filters, an approach was adopted that displays the items that meet the filter criteria, together with their ascending elements up to the root, so as to display the entire hierarchy of items. The filtering algorithm is implemented as follows:
 
-#### Filtragem da Árvore
+1. **Setting items that meet the filters**: Apply filters to get only matching items. Set each item in this collection as visible.
+2. **Making ancestors visible**: For each item that meets the filters, iterate through the collection of ancestors marking them as visible.
 
-Para aplicar os filtros, foi adotada uma abordagem que exibe os itens que atendem aos critérios dos filtros, juntamente com seus elementos ascendentes até a raiz, de modo a exibir toda a hierarquia dos itens. O algoritmo de filtragem é implementado da seguinte forma:
-
-1. **Definição dos itens que atendem aos filtros**: Aplique os filtros para obter apenas os itens correspondentes. Defina cada item desta coleção como visível.
-2. **Tornando visível os ascendentes**: Para cada item que atender aos filtros, percorra a coleção dos ascendentes marcando-os como visíveis.
-
-Como o acesso aos itens e seus ascendentes é feita de forma direta, **a complexidade assintótica deste algoritmo aproxima-se de O(n)**.
+Since access to items and their ancestors is done directly, **the asymptotic complexity of this algorithm approaches O(n)**.
 
 
-#### Processamento de filtros com Isolates
+### Filter processing with Isolates
 
-Para evitar travamentos durante a aplicação de filtros em árvores muito grandes, utilizou-se Isolates para que a operação de filtragem seja processada em uma thread separada, liberando a UI principal e garantindo uma navegação fluida. O uso desta técnica permite que o app mantenha uma performance estável, mesmo em cenários onde a quantidade de ativos é elevada.
+To avoid crashes when applying filters to very large trees, Isolates was used so that the filtering operation is processed in a separate thread, freeing up the main UI and ensuring smooth navigation. Using this technique allows the app to maintain stable performance, even in scenarios where the number of assets is high.
 
-#### Virtualização da listagem de ativos com ListView.builder
+### Virtualizing Asset Listing with ListView.builder
 
-Para evitar problemas de desempenho, especialmente com listas extensas de ativos, o ListView.builder foi implementado em todos os níveis da árvore para renderiza-la de forma virtual. Esse componente carrega apenas os itens visíveis no momento, diferentemente de uma ListView simples, que renderiza todos os itens de uma vez. Essa abordagem aumenta a eficiência da aplicação mantendo o uso de memória e o tempo de renderização baixos, proporcionando uma experiência de navegação mais fluida.
+To avoid performance issues, especially with large asset lists, ListView.builder has been implemented at all levels of the tree to render the tree virtually. This component loads only the currently visible items, unlike a simple ListView, which renders all items at once. This approach increases the efficiency of the application by keeping memory usage and rendering time low, providing a more fluid navigation experience.
 
+## Architecture
 
-## Trabalhos futuros
+The application emphasizes separation of concerns, adhering to SOLID, Clean Architecture/Code, and Domain-Driven Design (DDD) principles.
 
-1. **Autenticação e Controle de Acesso**: Implementar a autenticação do usuário e controle de acesso para limitar quais recursos podem ser visualizados ou editados. Isso seria útil para ambientes com diferentes níveis hierárquicos de segurança e controle.
-2. **Notificações em Tempo Real**: Implementar um sistema de notificações para alertar o usuário sobre mudanças críticas nos ativos. Esse recurso poderia ser integrado via push notifications ou WebSocket, garantindo que o usuário sempre receba as informações mais recentes, mesmo estando fora do aplicativo.
-3. **Inspecionar ativos**: Possibilitar a visualização dos ativos em mais detalhes, possibilitando agendar manutenções automáticas ou gerar checklists de inspeção. Isso garante que a aplicação não só auxilie no monitoramento, mas também facilite a manutenção preventiva.
-4. **Cadastro de serviços**: Possibilitar a criação de serviços para um ativo ou grupo de ativos. Cada serviço pode conter informações como o tipo de manutenção (preventiva, corretiva, preditiva), data de realização, registros fotográficos e outros. Com base no conhecimento da estrutura do ativo, a aplicação permitiria a seleção dos componentes ou materiais necessários para realizar o serviço. Cada material pode ser associado ao seu respectivo código ERP, facilitando o planejamento logístico e a requisição de peças junto ao sistema de inventário. Pode-se também haver a possibilidade de exportar um Relatório Récnico de Serviço, contendo os itens acima mencionados. Neste módulo adicional, pode-se manter um histórico de serviços realizados nos ativos, contento os materiais usados, tempo de execução e os profissionais envolvidos. Esse histórico pode ser utilizado para análise preditiva, ajudando a identificar padrões de falhas e melhorar a previsibilidade de problemas. Além disso tudo, conhecendo a lista de materiais e programação de manutenção dos ativos, a aplicação pode automaticamente gerar e agendar ordens de serviços, economizando tempo e reduzindo riscos de erros e atrasos.  
-5. **Melhorias na interface de visualização dos ativos em árvore**: Aprimorar a experiência do usuário ao visualizar a árvore de ativos, com animações suaves ao expandir/fechar níveis da árvore, assim como aperfeiçoar o desempenho ao exibir uma árvore com uma quantidade generosa de ativos.
-6. **Mapeamento Geospacial**: Incorporar um mapa geospacial que exiba a localização de cada unidade e seus ativos, permitindo a navegação rápida e possibilitando uma visão a nível macro.
-   
+1. **Presentation Layer**: Includes an application using MobX as a state management standard.
+2. **Service Layer**: Consists of command handlers, models, results, and services.
+3. **Domain Layer**: Includes entities, commands, validations, and repository abstractions.
+4. **Data Layer**: Implements data access repositories.
+
 ## Projects
 
-O Assets Manager é composto por quatro projetos principais, cada um desempenhando um papel específico na arquitetura do sistema:
+Assets Manager is comprised of four main projects, each playing a specific role in the system architecture:
 
-- [**assets-manager-app**](https://github.com/erickerate/Assets-Manager/tree/main/src/application): Um aplicativo móvel construído com Flutter.
-- [**assets-manager-domain**](https://github.com/erickerate/Assets-Manager/tree/main/src/domain): O pacote de domínio, abrangendo abstrações para ativos, locais, componentes, modelos, abstração de repositórios e muito mais.
+- [**assets-manager-app**](https://github.com/erickerate/Assets-Manager/tree/main/src/application): A mobile app built with Flutter.
+- [**assets-manager-domain**](https://github.com/erickerate/Assets-Manager/tree/main/src/domain): The domain package, covering abstractions for assets, locations, components, models, repository abstraction, and more.
 - [**assets-manager-data**](https://github.com/erickerate/Assets-Manager/tree/main/src/data): O pacote para gerir acesso a dados, contendo implementações dos repositórios.
-- [**assets-manager-service**](https://github.com/erickerate/Assets-Manager/tree/main/src/service): O pacote de serviços, responsável por conectar as regras de negócio com a camada de dados.
+- [**assets-manager-service**](https://github.com/erickerate/Assets-Manager/tree/main/src/service): The service package, responsible for connecting business rules with the data layer.
 
-## Arquitetura
+## Future technical improvements
 
-A aplicação enfatiza a separação de responsabilidades, aderindo aos princípios SOLID, Clean Architecture/Code e Domain-Driven Design (DDD).
+1. **Tree builder algorithm optimization**: Improve the asset tree construction algorithm to have low asymptotic complexity ✅
+2. **Optimize filter processing**: Implement the use of isolate to filter assets ✅
+3. **Virtualization rendering techniques***: Apply virtual rendering at all levels of the tree to improve efficiency and user experience ✅
+4. **Testing and coverage strategies**: Implement unit, integration and test coverage tests. ⌛
+5. **Handling unexpected exceptions**: Implement strategies to capture errors and unexpected exceptions, ensuring stability and providing appropriate responses to critical failures in the application ⌛
+6. **Theme Customization**: Add support for light and dark theme selection, allowing users to switch between modes and improve the visual experience according to their preference or environment ⌛
+7. **Internationalization and localization**: Configure support for multiple languages ​​and regional formats, allowing the application to adapt to users in different locations ⌛
 
-1. **Camada de apresentação**: Inclui uma aplicação utilizando o MobX como padrão de gerenciamento de estado.
-2. **Camada de serviço**: Consiste em manipuladores de comandos, modelos, resultados e serviços.
-3. **Camada de domínio**: Inclui entidades, comandos, validações e abstrações de repositório.
-4. **Camada de dados**: Implementa os repositórios de acesso a dados.
+## Future features
+
+1. **Authentication and Access Control**: Implement user authentication and access control to limit which resources can be viewed or edited. This would be useful for environments with different hierarchical levels of security and control.
+2. **Real-Time Notifications**: Implement a notification system to alert the user to critical changes in assets. This feature could be integrated via push notifications or WebSocket, ensuring that the user always receives the latest information, even when outside the application.
+3. **Inspect Assets**: Enable viewing of assets in greater detail, making it possible to schedule automatic maintenance or generate inspection checklists. This ensures that the application not only assists in monitoring, but also facilitates preventive maintenance.
+4. **Service Registration**: Enable the creation of services for an asset or group of assets. Each service can contain information such as the type of maintenance (preventive, corrective, predictive), date performed, photographic records, and others. Based on knowledge of the asset structure, the application would allow the selection of components or materials needed to perform the service. Each material can be associated with its respective ERP code, facilitating logistics planning and the requisition of parts from the inventory system. It is also possible to export a Service Report containing the items mentioned above. In this additional module, a history of services performed on the assets can be maintained, containing the materials used, execution time and professionals involved. This history can be used for predictive analysis, helping to identify failure patterns and improve the predictability of problems. In addition, knowing the list of materials and maintenance schedule of the assets, the application can automatically generate and schedule service orders, saving time and reducing the risk of errors and delays.
+5. **Geospatial Mapping**: Incorporate a geospatial map that displays the location of each unit and its assets, allowing for quick navigation and providing a macro-level view.
+   
+## Getting Started
   
-## Requisitos
+### Requisitos
 * Dart SDK '>=3.4.0 <4.0.0'
 * Flutter '3.22.0'
 
-## Executar
-As etapas a serem executadas são:
-1. Clonar este repositório: `gh repo clone erickerate/Assets-Manager`.
-2. Abrir o workspace em `src/assets-manager`.
-3. Correr `flutter pub get` e `flutter run`.
+### Installation
 
-## Demonstração
+1. Clone this repository
+   ```sh
+   gh repo clone erickerate/Assets-Manager
+   ```
+
+2. Open the workspace
+   ```sh
+   src/assets-manager
+   ```
+   
+3. Run
+   ```sh
+   flutter pub get
+   ```
+   ```sh
+   flutter run
+   ```
+
+## Demonstration
 https://github.com/user-attachments/assets/dae2f135-b721-4010-ad4c-9b6a9cc35e65
