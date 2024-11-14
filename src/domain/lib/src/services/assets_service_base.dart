@@ -37,18 +37,17 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
       AssetsTree assetsTree = AssetsTree();
       TreeItem treeItem;
       DateTime start = DateTime.now();
-      Map<String, TreeItem> map = <String, TreeItem>{};
 
       // Localizações
       for (Location location in locations) {
         treeItem = TreeItem.fromLocation(location);
-        map.putIfAbsent(location.id!, () => treeItem);
+        assetsTree.map.putIfAbsent(location.id!, () => treeItem);
       }
 
       // Ativos
       for (Asset asset in assets) {
         treeItem = TreeItem.fromAsset(asset);
-        map.putIfAbsent(asset.id!, () => treeItem);
+        assetsTree.map.putIfAbsent(asset.id!, () => treeItem);
       }
 
       DateTime end = DateTime.now();
@@ -58,29 +57,30 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
 
       // #endregion
 
-      // #region 1. Constrói estrutura
+      // #region 2. Constrói estrutura
 
       start = DateTime.now();
 
       TreeItem parentTreeItem;
-      for (TreeItem treeItem in map.values) {
+      for (TreeItem treeItem in assetsTree.map.values) {
         assetsTree.allItems.add(treeItem);
 
         if (treeItem.parentId == null) {
           assetsTree.roots.add(treeItem);
         } else {
-          parentTreeItem = map[treeItem.parentId]!;
+          parentTreeItem = assetsTree.map[treeItem.parentId]!;
           parentTreeItem.addChild(treeItem);
           treeItem.parent = parentTreeItem;
         }
       }
 
       // Caminho até a raiz (Caminho do pai + o item vigente)
-      List<TreeItem> orderedTreeItems = map.values.orderBy((o) => o.level).toList();
+      List<TreeItem> orderedTreeItems =
+          assetsTree.allItems.orderBy((o) => o.level).toList();
       for (TreeItem treeItem in orderedTreeItems) {
         if (treeItem.parentId == null) continue;
 
-        parentTreeItem = map[treeItem.parentId]!;
+        parentTreeItem = assetsTree.map[treeItem.parentId]!;
         treeItem.ascendants = [...parentTreeItem.ascendants, parentTreeItem];
       }
 

@@ -1,6 +1,5 @@
 import 'dart:isolate';
 
-import 'package:application/app/modules/assets/isolates/apply_filters_isolate.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';

@@ -29,3 +29,6 @@ export 'src/models/stores/store_base.dart';
 export 'src/models/stores/companies_store.dart';
 export 'src/models/stores/assets_store.dart';
 export 'src/models/stores/tree_item_store.dart';
+
+// Isolates
+export 'src/isolates/apply_filters_isolate.dart';

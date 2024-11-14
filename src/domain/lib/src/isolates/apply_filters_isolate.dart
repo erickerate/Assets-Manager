@@ -12,8 +12,21 @@ class IsolateModel {
 /// Executar tarefas de filtros
 void executeFiltersTask(IsolateModel model) {
   try {
-    for (TreeItem treeItem in model.treeItems) {
-      bool visible = treeItemMeetsAnyFilter(treeItem, model.filters);
+    List<TreeItem> filteredTreeItems =
+        getFilteredTreeItems(model.treeItems, model.filters);
+
+    model.sendPort.send(filteredTreeItems);
+  } catch (exception) {
+    throw Exception("Fail in executeFiltersTask(): $exception");
+  }
+}
+
+/// Obter itens filtrados
+List<TreeItem> getFilteredTreeItems(
+    List<TreeItem> treeItems, List<AssetFilter> filters) {
+  try {
+    for (TreeItem treeItem in treeItems) {
+      bool visible = treeItemMeetsAnyFilter(treeItem, filters);
 
       if (visible) {
         treeItem.visible = true;
@@ -25,11 +38,11 @@ void executeFiltersTask(IsolateModel model) {
     }
 
     List<TreeItem> filteredTreeItems =
-        model.treeItems.where((w) => w.visible).toList();
+        treeItems.where((w) => w.visible).toList();
 
-    model.sendPort.send(filteredTreeItems);
+    return filteredTreeItems;
   } catch (exception) {
-    throw Exception("Fail in executeFiltersTask(): $exception");
+    throw Exception("Fail in getFilteredTreeItems(): $exception");
   }
 }
 

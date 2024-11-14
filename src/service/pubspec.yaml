@@ -11,6 +11,9 @@ environment:
 dependencies:
   # path: ^1.8.0
 
+  mockito: ^5.4.4
+  darq: ^2.0.0
+  
   domain:
     path: ../domain
 
