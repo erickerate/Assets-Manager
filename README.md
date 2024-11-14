@@ -38,7 +38,7 @@ Para evitar travamentos durante a aplicação de filtros em árvores muito grand
 
 #### Virtualização da listagem de ativos com ListView.builder
 
-Para evitar problemas de desempenho, especialmente com listas extensas de ativos, o ListView.builder foi implementado em todos os níveis da árvore para renderiza-la de forma virtual. Esse componente carrega apenas os itens visíveis no momento, diferentemente de ListView simples, que renderiza todos os itens de uma vez. Essa abordagem aumenta a eficiência da aplicação mantendo o uso de memória e o tempo de renderização baixos, proporcionando uma experiência de navegação mais fluida.
+Para evitar problemas de desempenho, especialmente com listas extensas de ativos, o ListView.builder foi implementado em todos os níveis da árvore para renderiza-la de forma virtual. Esse componente carrega apenas os itens visíveis no momento, diferentemente de uma ListView simples, que renderiza todos os itens de uma vez. Essa abordagem aumenta a eficiência da aplicação mantendo o uso de memória e o tempo de renderização baixos, proporcionando uma experiência de navegação mais fluida.
 
 
 ## Trabalhos futuros
