@@ -82,9 +82,10 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
       AssetsTree assetsTree =
           this.assetsService.buildAssetsTree(this.assets, this.locations);
-      for (TreeItem treeItem in assetsTree.allItems) {
+      for (TreeItem treeItem in assetsTree.stackItems) {
         ITreeItemStore treeItemStore = Modular.get<ITreeItemStore>();
         treeItemStore.treeItem = treeItem;
+        treeItemStore.visible = treeItem.isRoot;
         treeItemStores.putIfAbsent(
           treeItem.id,
           () => treeItemStore,

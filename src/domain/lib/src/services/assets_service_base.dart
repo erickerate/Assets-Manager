@@ -36,6 +36,7 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
 
       AssetsTree assetsTree = AssetsTree();
       TreeItem treeItem;
+      List<TreeItem> stackItems = <TreeItem>[];
       DateTime start = DateTime.now();
 
       // Localizações
@@ -61,12 +62,11 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
 
       start = DateTime.now();
 
+      // Navegação O(n)
       TreeItem parentTreeItem;
       for (TreeItem treeItem in assetsTree.map.values) {
-        assetsTree.allItems.add(treeItem);
-
         if (treeItem.parentId == null) {
-          assetsTree.roots.add(treeItem);
+          stackItems.add(treeItem);
         } else {
           parentTreeItem = assetsTree.map[treeItem.parentId]!;
           parentTreeItem.addChild(treeItem);
@@ -74,9 +74,20 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
         }
       }
 
-      // Caminho até a raiz (Caminho do pai + o item vigente)
+      // Linearização => Usado para listagem! O(n)
+      stackItems = stackItems.reversed.toList();
+      while (stackItems.isNotEmpty) {
+        final TreeItem current = stackItems.removeLast();
+        assetsTree.stackItems.add(current);
+
+        if (current.children.isNotEmpty) {
+          stackItems.addAll(current.children.reversed);
+        }
+      }
+
+      // Caminho até a raiz => Usado para filtros! O(n)
       List<TreeItem> orderedTreeItems =
-          assetsTree.allItems.orderBy((o) => o.level).toList();
+          assetsTree.stackItems.orderBy((o) => o.level).toList();
       for (TreeItem treeItem in orderedTreeItems) {
         if (treeItem.parentId == null) continue;
 

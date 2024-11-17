@@ -51,16 +51,16 @@ class _TreeItemsViewState extends State<TreeItemsView> {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
-      List<ITreeItemStore> roots = this
+      List<ITreeItemStore> treeItems = this
           .controller
           .treeItemStores
           .values
-          .where((w) => w.visible && w.treeItem.isRoot)
+          .where((w) => w.visible)
           .toList();
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
         child: !this.controller.isLoading
-            ? roots.isEmpty
+            ? treeItems.isEmpty
                 ? const Center(
                     child: Text(
                       "Não há itens para serem exibidos",
@@ -69,13 +69,14 @@ class _TreeItemsViewState extends State<TreeItemsView> {
                       ),
                     ),
                   )
-                : ListView.separated(
-                    itemCount: roots.length,
-                    separatorBuilder: (context, index) {
-                      return const Padding(padding: EdgeInsets.only(bottom: 4));
-                    },
+                : ListView.builder(
+                    itemCount: treeItems.length,
                     itemBuilder: (context, index) {
-                      ITreeItemStore treeItemStore = roots[index];
+                      ITreeItemStore treeItemStore = treeItems[index];
+
+                      // ignore: avoid_print
+                      print("Building ${treeItemStore.treeItem.description}");
+
                       return TreeItemView(
                         key: Key(treeItemStore.treeItem.id),
                         treeItemStore: treeItemStore,

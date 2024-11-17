@@ -46,12 +46,6 @@ class _TreeItemViewState extends State<TreeItemView> {
         bool expanded = treeItemStore.expanded;
         bool isFixedExpanded = treeItemStore.isFixedExpanded;
 
-        // Filhos
-        List<TreeItem> children = treeItem.children;
-        List<ITreeItemStore> treeItemStoreChildren = children
-            .map((child) => this.assetsStore.treeItemStores[child.id]!)
-            .toList();
-
         ComponentTreeItem? componentTreeItem =
             (treeItem is ComponentTreeItem) ? treeItem : null;
         TreeItemWithStatus? treeItemWithStatus =
@@ -62,8 +56,6 @@ class _TreeItemViewState extends State<TreeItemView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // #region Item
-
               Container(
                 height: 28,
                 padding: EdgeInsets.zero,
@@ -221,28 +213,6 @@ class _TreeItemViewState extends State<TreeItemView> {
                   ],
                 ),
               ),
-
-              // #endregion
-
-              // #region Filhos
-
-              if (expanded) ...[
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: treeItemStoreChildren.length,
-                  itemBuilder: (context, index) {
-                    ITreeItemStore treeItemStore = treeItemStoreChildren[index];
-
-                    return Visibility(
-                      visible: treeItemStore.visible,
-                      child: TreeItemView(treeItemStore: treeItemStore),
-                    );
-                  },
-                ),
-              ],
-
-              // #endregion
             ],
           ),
         );

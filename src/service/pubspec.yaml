@@ -13,6 +13,7 @@ dependencies:
 
   mockito: ^5.4.4
   darq: ^2.0.0
+  shared_preferences: ^2.3.3
   
   domain:
     path: ../domain

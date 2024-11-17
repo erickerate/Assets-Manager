@@ -29,7 +29,6 @@ abstract class TreeItemStoreBase with Store implements ITreeItemStore {
   @override
   @action
   void setVisible(bool visible) {
-    if (this.visible == visible) return;
     this.visible = visible;
     this.treeItem.visible = visible;
   }
@@ -48,12 +47,28 @@ abstract class TreeItemStoreBase with Store implements ITreeItemStore {
     }
 
     this.expanded = expanded;
-    if (this.expanded && setChildrenVisibility) {
-      for (TreeItem treeItem in this.treeItem.children) {
-        ITreeItemStore treeItemStore =
-            this.assetsStore.treeItemStores[treeItem.id]!;
-        treeItemStore.setExpanded(false);
-        treeItemStore.setVisible(true);
+    if (setChildrenVisibility) {
+      if (this.expanded) {
+        for (TreeItem treeItem in this.treeItem.children) {
+          ITreeItemStore treeItemStore =
+              this.assetsStore.treeItemStores[treeItem.id]!;
+
+          treeItemStore.setExpanded(false);
+          treeItemStore.setVisible(true);
+        }
+      } else {
+        List<ITreeItemStore> expandedDescendants = this
+            .assetsStore
+            .treeItemStores
+            .values
+            .where((treeItemStore) =>
+                treeItemStore.visible &&
+                treeItemStore.treeItem.ascendants.contains(this.treeItem))
+            .toList();
+        for (ITreeItemStore expandedDescendant in expandedDescendants) {
+          expandedDescendant.setExpanded(false);
+          expandedDescendant.setVisible(false);
+        }
       }
     }
   }

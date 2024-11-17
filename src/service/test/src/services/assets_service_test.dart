@@ -53,8 +53,8 @@ void main() {
 
       int itemsCount = locations.length + assets.length;
       expect(assetsTree, isNotNull);
-      expect(assetsTree!.roots, isA<List<TreeItem>>());
-      expect(assetsTree!.allItems.length, itemsCount);
+      expect(assetsTree!.stackItems, isA<List<TreeItem>>());
+      expect(assetsTree!.stackItems.length, itemsCount);
 
       // #endregion
     });
@@ -63,10 +63,9 @@ void main() {
       // #region Assert
 
       expect(assetsTree, isNotNull);
-      List<String> treeItemIds = assetsTree!.allItems
+      List<String> treeItemIds = assetsTree!.stackItems
           .select((treeItem, index) => treeItem.id)
           .toList();
-      expect(assetsTree!.roots.isNotEmpty, true);
       expect(Set.from(treeItemIds).length, treeItemIds.length);
 
       // #endregion
@@ -92,11 +91,11 @@ void main() {
       // #region Act / Assert
 
       expect(assetsTree, isNotNull);
-      for (TreeItem treeItem in assetsTree!.allItems) {
+      for (TreeItem treeItem in assetsTree!.stackItems) {
         treeItem.visible = false;
       }
       List<TreeItem> filteredTreeItems =
-          getFilteredTreeItems(assetsTree!.allItems, [textSearchFilter]);
+          getFilteredTreeItems(assetsTree!.stackItems, [textSearchFilter]);
 
       // #endregion
 
@@ -120,11 +119,11 @@ void main() {
       // #region Act / Assert
 
       expect(assetsTree, isNotNull);
-      for (TreeItem treeItem in assetsTree!.allItems) {
+      for (TreeItem treeItem in assetsTree!.stackItems) {
         treeItem.visible = false;
       }
-      List<TreeItem> filteredTreeItems =
-          getFilteredTreeItems(assetsTree!.allItems, [energySensorTypeFilter]);
+      List<TreeItem> filteredTreeItems = getFilteredTreeItems(
+          assetsTree!.stackItems, [energySensorTypeFilter]);
 
       // #endregion
 
@@ -146,11 +145,11 @@ void main() {
       // #region Act
 
       expect(assetsTree, isNotNull);
-      for (TreeItem treeItem in assetsTree!.allItems) {
+      for (TreeItem treeItem in assetsTree!.stackItems) {
         treeItem.visible = false;
       }
       List<TreeItem> filteredTreeItems = getFilteredTreeItems(
-          assetsTree!.allItems, [criticalAssetStateFilter]);
+          assetsTree!.stackItems, [criticalAssetStateFilter]);
 
       // #endregion
 
@@ -165,7 +164,7 @@ void main() {
 
 /// Validar hierarquia dos itens
 bool validateAssetsTreeHierarchy(AssetsTree assetsTree) {
-  for (TreeItem treeItem in assetsTree.allItems) {
+  for (TreeItem treeItem in assetsTree.stackItems) {
     if (treeItem.parentId == null) continue;
 
     TreeItem parentTreeItem = assetsTree.map[treeItem.parentId]!;

@@ -32,3 +32,6 @@ export 'src/models/stores/tree_item_store.dart';
 
 // Isolates
 export 'src/isolates/apply_filters_isolate.dart';
+
+// Providers
+export 'src/providers/preferences_provider.dart';
