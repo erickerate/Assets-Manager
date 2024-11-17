@@ -14,13 +14,35 @@ Below you will find screenshots of the main screens of the application.
 
 ### Tree Construction
 
-To build the tree efficiently, a Map data structure based on key/value pairs was used, allowing a direct construction of the tree by associating each asset in the list with a specific node through an id -> TreeItem pair. Each item stores direct references to both its first-level children and its ancestors up to the root of the tree. This allows quick access to any node in the structure, without the need for repeated iterations, in addition to facilitating direct access to the children and ancestors of each item, optimizing the tree construction and filtering operations. This algorithm can be called **Hierarchical Tree Construction Algorithm with Direct Hash-Based Mapping and Path Compression**, and is defined as follows:
+To build the tree efficiently, a Map data structure based on key/value pairs was used, allowing a direct construction of the tree by associating each asset in the list with a specific node through an id -> TreeItem pair. Each item stores direct references to both its first-level children and its ancestors up to the root of the tree. This allows:
 
-1. **Initializing Nodes and Map**: Create a Map of items, where each key represents the item id and the value is the corresponding item (TreeItem). For each asset in the list, instantiate a TreeItem and add it to the map, using the item id as the key.
-2. **Building the Tree Hierarchy**: For each item, if it has a parent, get it directly through the map and add the item to the collection of children of that parent. If the item has no parent, add it to the collection of roots of the tree.
-3. **Consolidating the Ascendants**: Walking from the root to the ends of the tree, define the collection of ancestors of each item as the collection of ancestors of the parent item, plus the item itself.
+1. Quick access to any node in the structure, without the need for repeated iterations.
+2. Facilitating direct access to the children and ancestors of each item.
+3. Optimization of tree building and filtering operations.
 
-Therefore, if there are n items to process, and each operation is done in constant time O(1), the overall asymptotic complexity of building the tree will be O(n).
+Additionally, tree linearization has been incorporated to generate a linear list of items, respecting the hierarchy and expansion state of each node. This linearization has been implemented using a stack-based approach, and is necessary to build the ListView.Builder interface component, which displays items in hierarchical order and in an optimized manner. The list is dynamically recalculated to reflect changes in the expansion state of the nodes without reprocessing the entire tree.
+
+This algorithm can be called **Hierarchical tree construction algorithm with hash-based direct mapping, path compression and linearization**, and is defined as follows:
+
+1. **Initializing Nodes and Map**:
+   - Create a map of items, where each key represents the item id and the value is the corresponding item (TreeItem).
+   - For each asset in the list, instantiate a TreeItem and add it to the map, using the item's id as the key.
+2. **Building the Tree Hierarchy**:
+   - For each item:
+      - If the item has a parent, locate it directly via the map and add the item to that parent's child collection.
+      - Otherwise, add it to the tree's root collection.
+3. **Consolidating the Ascendants**:
+   - Walking from the root to the ends of the tree, set the ancestor collection of each item to the ancestor collection of the parent item, plus the item itself.
+4. **Linearizing the Tree**:
+   - Using a stack, add the root nodes to the initial stack.
+   - As long as the stack is not empty:
+      - Remove the next node from the stack and add it to the linear list of items.
+      - If the node contains children, add them to the stack, ensuring the correct order.
+
+### Asymptotic Complexity
+- **Tree Construction**: Each map access operation (get or put) is performed in constant time 𝑂(1). With 𝑛 items to process, the overall complexity of building the tree is 𝑂(𝑛).
+- **Consolidation of Ascendants**: Each node is processed only once, accessing and copying the parent's list of ancestors. Since the total cost of accessing and constructing all the ancestor lists is distributed among all nodes, the complexity of this step is also 𝑂(𝑛).
+- **Tree Linearization**: The algorithm traverses each visible node once and performs constant-time operations to process the stack, resulting in a complexity of 𝑂(𝑛), where 𝑛 is the total number of nodes.
 
 ### Tree Filtering
 
@@ -29,8 +51,7 @@ To apply the filters, an approach was adopted that displays the items that meet 
 1. **Setting items that meet the filters**: Apply filters to get only matching items. Set each item in this collection as visible.
 2. **Making ancestors visible**: For each item that meets the filters, iterate through the collection of ancestors marking them as visible.
 
-Since access to items and their ancestors is done directly, **the asymptotic complexity of this algorithm approaches O(n)**.
-
+Since access to items and their ancestors is done directly, **the asymptotic complexity of this algorithm approaches 𝑂(𝑛)**.
 
 ### Filter processing with Isolates
 
