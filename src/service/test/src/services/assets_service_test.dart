@@ -7,10 +7,13 @@ import 'package:mockito/mockito.dart';
 import 'package:service/service.dart';
 import 'package:test/test.dart';
 
+
+
+
 class AssetsRepositoryMock extends Mock implements IAssetsRepository {}
 
 void main() {
-  group("Tree Assets ||", () {
+  group("Tree Assets :: ", () {
     // #region Setup
 
     late List<Asset> assets;
@@ -73,7 +76,7 @@ void main() {
       // #region Assert
 
       expect(assetsTree, isNotNull);
-      expect(validateAssetsTreeHierarchy(assetsTree!), true);
+      expect(validateAssetsTreeHierarchy(assetsTree!), isTrue);
 
       // #endregion
     });
@@ -156,6 +159,32 @@ void main() {
       expect(filteredTreeItems.length, 5);
 
       // #endregion
+    });
+
+    test('The tree stack linearization is consistent with the item hierarchy',
+        () {
+      expect(assetsTree, isNotNull);
+      List<TreeItem> treeItems = assetsTree!.map.values.toList();
+      expect(
+        assetsTree!.stackItems.toSet(),
+        equals(treeItems.toSet()),
+        reason:
+            'Linearized list must contain exactly the same items as the tree.',
+      );
+
+      for (int i = 0; i < assetsTree!.stackItems.length; i++) {
+        TreeItem current = assetsTree!.stackItems[i];
+
+        for (TreeItem child in current.children) {
+          int childIndex = assetsTree!.stackItems.indexOf(child);
+          expect(
+            childIndex > i,
+            isTrue,
+            reason:
+                'Child ${child.description} must appear after its parent ${current.description}.',
+          );
+        }
+      }
     });
   });
 }
