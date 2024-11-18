@@ -65,7 +65,7 @@ class _SkeletonLoaderViewState extends State<SkeletonLoaderView> {
           ),
           items: 1,
           period: const Duration(seconds: 2),
-          highlightColor: const Color(0xFF2188FF),
+          highlightColor: Theme.of(context).colorScheme.primary,
           direction: SkeletonDirection.ltr,
         ),
       ),

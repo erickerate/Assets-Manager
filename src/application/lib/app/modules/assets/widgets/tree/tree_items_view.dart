@@ -61,11 +61,12 @@ class _TreeItemsViewState extends State<TreeItemsView> {
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
         child: !this.controller.isLoading
             ? treeItems.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
                       "Não há itens para serem exibidos",
                       style: TextStyle(
-                        color: Color(0xFF77818C),
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
                     ),
                   )

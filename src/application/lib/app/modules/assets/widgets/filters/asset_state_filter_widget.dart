@@ -67,14 +67,15 @@ class _AssetStateFilterWidgetState extends State<AssetStateFilterWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color:
-              this.widget.isSelected ? const Color(0xFF2188FF) : Colors.white,
+          color: this.widget.isSelected
+              ? Theme.of(context).colorScheme.secondary
+              : Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(3),
           border: Border.all(
             width: 1,
             color: this.widget.isSelected
                 ? Colors.transparent
-                : const Color(0xFFD8DFE6),
+                : Theme.of(context).colorScheme.outline,
           ),
         ),
         child: Row(
@@ -83,8 +84,8 @@ class _AssetStateFilterWidgetState extends State<AssetStateFilterWidget> {
             Icon(
               this.widget.icon,
               color: this.widget.isSelected
-                  ? Colors.white
-                  : const Color(0xFF77818C),
+                  ? Theme.of(context).colorScheme.onSecondary
+                  : Theme.of(context).colorScheme.onSecondaryContainer,
               size: 16,
             ),
             const Padding(padding: EdgeInsets.only(right: 6)),
@@ -95,8 +96,8 @@ class _AssetStateFilterWidgetState extends State<AssetStateFilterWidget> {
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: this.widget.isSelected
-                    ? Colors.white
-                    : const Color(0xFF77818C),
+                    ? Theme.of(context).colorScheme.onSecondary
+                    : Theme.of(context).colorScheme.onSecondaryContainer,
               ),
             ),
           ],

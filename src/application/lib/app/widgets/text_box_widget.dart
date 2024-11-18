@@ -61,33 +61,33 @@ class _TextBoxWidgetState extends State<TextBoxWidget> {
       height: this.widget.height,
       child: TextFormField(
         controller: this.controller,
-        style: const TextStyle(
-          color: Color(0XFF8E98A3),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
           fontWeight: FontWeight.w400,
           decoration: TextDecoration.none,
           decorationThickness: 0,
         ),
-        cursorColor: const Color(0XFF8E98A3),
+        cursorColor: Theme.of(context).colorScheme.onSurface,
         decoration: InputDecoration(
           filled: true,
           contentPadding: EdgeInsets.zero,
-          fillColor: const Color(0xFFEAEFF3),
+          fillColor: Theme.of(context).colorScheme.surface,
           hintText: this.widget.hintText,
-          hintStyle: const TextStyle(
-            color: Color(0XFF8E98A3),
+          hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w400,
           ),
-          prefixIcon: const Icon(
+          prefixIcon: Icon(
             Icons.search,
-            color: Color(0XFF8E98A3),
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           suffixIcon: this.controller.text.isEmpty
               ? null
               : IconButton(
                   visualDensity: VisualDensity.compact,
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.close,
-                    color: Color(0XFF8E98A3),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                   onPressed: () {
                     this.controller.clear();

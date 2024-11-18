@@ -9,8 +9,6 @@ import 'package:test/test.dart';
 
 class AssetsRepositoryMock extends Mock implements IAssetsRepository {}
 
-class LocationsRepositoryMock extends Mock implements IRepository<Location> {}
-
 void main() {
   group("Tree Assets ||", () {
     // #region Setup

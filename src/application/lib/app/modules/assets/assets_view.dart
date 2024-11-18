@@ -46,7 +46,7 @@ class _AssetsViewState extends State<AssetsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF17192D),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         automaticallyImplyLeading: true,
         flexibleSpace: SafeArea(
           child: Center(
@@ -59,8 +59,8 @@ class _AssetsViewState extends State<AssetsView> {
                 const Padding(padding: EdgeInsets.only(right: 6)),
                 Text(
                   "Assets / ${this.controller.assetsService.company.name!} Unit",
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -69,7 +69,7 @@ class _AssetsViewState extends State<AssetsView> {
           ),
         ),
         leading: BackButton(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.onPrimary,
           onPressed: () async {
             Modular.get<IAssetsStore>()
                 .isolate
@@ -86,9 +86,12 @@ class _AssetsViewState extends State<AssetsView> {
 
             Container(
               width: double.infinity,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(width: 1, color: Color(0xFFEAEEF2)),
+                  bottom: BorderSide(
+                    width: 1,
+                    color: Theme.of(context).colorScheme.shadow,
+                  ),
                 ),
               ),
               child: Container(

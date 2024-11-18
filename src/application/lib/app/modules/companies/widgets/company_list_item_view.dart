@@ -41,7 +41,7 @@ class _CompanyListItemViewState extends State<CompanyListItemView> {
         height: 76,
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
         decoration: BoxDecoration(
-          color: const Color(0xFF2188FF),
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
@@ -52,9 +52,9 @@ class _CompanyListItemViewState extends State<CompanyListItemView> {
             const Padding(padding: EdgeInsets.only(right: 16)),
             Text(
               "${this.widget.company.name} Unit",
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSecondary,
                 fontWeight: FontWeight.w500,
               ),
             )

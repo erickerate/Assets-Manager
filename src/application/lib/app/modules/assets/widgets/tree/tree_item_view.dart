@@ -40,7 +40,7 @@ class _TreeItemViewState extends State<TreeItemView> {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        Color lineColor = const Color(0xFFD8DFE6);
+        Color lineColor = Theme.of(context).colorScheme.outline;
         ITreeItemStore treeItemStore = this.widget.treeItemStore;
         TreeItem treeItem = treeItemStore.treeItem;
         bool expanded = treeItemStore.expanded;
@@ -132,8 +132,10 @@ class _TreeItemViewState extends State<TreeItemView> {
                                 ? Icons.keyboard_arrow_down
                                 : Icons.keyboard_arrow_right,
                             color: isFixedExpanded
-                                ? const Color(0xFF77818C)
-                                : Colors.black,
+                                ? Theme.of(context).colorScheme.outline
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
                             size: 24,
                           ),
                           onPressed: isFixedExpanded
@@ -177,9 +179,11 @@ class _TreeItemViewState extends State<TreeItemView> {
                     Flexible(
                       child: Text(
                         treeItem.description,
-                        style: const TextStyle(
+                        style: TextStyle(
                           overflow: TextOverflow.ellipsis,
                           fontSize: 14,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
