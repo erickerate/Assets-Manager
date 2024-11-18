@@ -7,8 +7,10 @@
 
 Below you will find screenshots of the main screens of the application.
 
-#### Application (v.14.11.2024)
-![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/app-overview.png)
+#### Application (v.17.11.2024)
+![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/app-overview-1.png)
+![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/app-overview-2.png)
+![Aplicação](https://github.com/erickerate/Assets-Manager/blob/main/assets/app-overview-3.png)
 
 ## Tree Construction and Filtering Algorithms
 
