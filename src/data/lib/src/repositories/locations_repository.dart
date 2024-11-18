@@ -3,18 +3,19 @@ import 'package:domain/domain.dart';
 import 'package:http/http.dart' as http;
 
 /// Implementação do repositório de localizações utilizando requisições HTTP
-class LocationsRepository implements IRepository<Location> {
+class LocationsRepository implements ILocationsRepository {
   // #region Constructors
 
   /// Implementação do repositório de localizações utilizando requisições HTTP
-  LocationsRepository({required this.company});
+  LocationsRepository();
 
   // #endregion
 
   // #region Members 'Owner' :: company
 
   /// Empresa
-  final Company company;
+  @override
+  late Company company;
 
   // #endregion
 

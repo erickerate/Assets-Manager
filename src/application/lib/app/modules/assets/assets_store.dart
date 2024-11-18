@@ -10,12 +10,48 @@ class AssetsStore = AssetsStoreBase with _$AssetsStore;
 
 /// Implementação da loja de recursos com MobX
 abstract class AssetsStoreBase with Store implements IAssetsStore {
-  // #region Constructors
+  // #region Members 'Initialize' :: initialize()
 
-  AssetsStoreBase() {
-    this.assetsService = Modular.get<AssetsServiceBase>();
-    this.locationsService = Modular.get<ServiceBase<Location>>();
+  /// Inicializar
+  @override
+  Future<void> initialize(Company company) async {
+    try {
+      this.company = company;
+      this.assetsService = Modular.get<AssetsServiceBase>();
+      this.assetsService.company = this.company;
+      this.locationsService = Modular.get<LocationsServiceBase>();
+      this.locationsService.company = this.company;
+
+      Modular.get<IAssetsStore>()
+          .receivePort
+          .listen(Modular.get<IAssetsStore>().listen);
+
+      this.dispatchIsLoading(false);
+    } on Exception catch (exception) {
+      throw Exception("Fail in initialize(): $exception");
+    }
   }
+
+  // #endregion
+
+  // #region Members 'Owner' :: company
+
+  /// Empresa
+  @override
+  late Company company;
+
+  // #endregion
+
+  // #region Members 'Assets' :: assetsService, assets
+
+  /// Serviço de recursos
+  @override
+  late AssetsServiceBase assetsService;
+
+  /// Ativos
+  @override
+  @observable
+  late List<Asset> assets;
 
   // #endregion
 
@@ -49,19 +85,6 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
   // #endregion
 
-  // #region Members 'Assets' :: assetsService, assets
-
-  /// Serviço de recursos
-  @override
-  late AssetsServiceBase assetsService;
-
-  /// Ativos
-  @override
-  @observable
-  late List<Asset> assets;
-
-  // #endregion
-
   // #region Members 'Assets Tree' :: treeItemStores, buildTreeAssets(), refreshAssetsTree(), expandedTreeItems(), toggleExpandedItem()
 
   /// Itens
@@ -77,7 +100,10 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
       this.dispatchIsLoading(true);
 
       Map<String, ITreeItemStore> treeItemStores = <String, ITreeItemStore>{};
+
+      this.assetsService.company = this.company;
       this.assets = await this.assetsService.getAll();
+      this.locationsService.company = this.company;
       this.locations = await this.locationsService.getAll();
 
       AssetsTree assetsTree =
@@ -150,7 +176,7 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
 
   /// Serviço de localizações
   @override
-  late ServiceBase<Location> locationsService;
+  late LocationsServiceBase locationsService;
 
   /// Localizações
   @override

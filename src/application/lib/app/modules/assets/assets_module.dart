@@ -14,22 +14,19 @@ class AssetsModule extends Module {
 
   @override
   void binds(i) {
-    i.addInstance<Company>(i.args.data as Company);
-
-    i.addInstance<IAssetsRepository>(AssetsRepository(
-      company: i.get<Company>(),
-    ));
+    // Ativos
+    i.addInstance<IAssetsRepository>(AssetsRepository());
     i.addInstance<AssetsServiceBase>(AssetsService(
       repository: i.get<IAssetsRepository>(),
     ));
 
-    i.addInstance<IRepository<Location>>(LocationsRepository(
-      company: i.get<Company>(),
-    ));
-    i.addInstance<ServiceBase<Location>>(LocationsService(
-      repository: i.get<IRepository<Location>>(),
+    // Localizações
+    i.addInstance<ILocationsRepository>(LocationsRepository());
+    i.addInstance<LocationsServiceBase>(LocationsService(
+      repository: i.get<ILocationsRepository>(),
     ));
 
+    // Lojas
     i.add<ITreeItemStore>(TreeItemStore.new);
     i.addSingleton<IAssetsStore>(AssetsStore.new);
   }

@@ -25,7 +25,8 @@ void main() {
     });
 
     test('Must get all locations', () async {
-      final locationsRepository = LocationsRepository(company: company);
+      final locationsRepository = LocationsRepository();
+      locationsRepository.company = company;
 
       final locations = await locationsRepository.getAll();
 
@@ -45,8 +46,9 @@ void main() {
     });
 
     test('Must get all assets', () async {
-      final assetsRepository = AssetsRepository(company: company);
-
+      final assetsRepository = AssetsRepository();
+      assetsRepository.company = company;
+      
       final assets = await assetsRepository.getAll();
 
       expect(assets, isA<List<Asset>>());

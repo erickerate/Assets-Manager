@@ -4,6 +4,20 @@ import 'package:domain/domain.dart';
 
 /// Interface para loja de ativos
 abstract class IAssetsStore implements StoreBase {
+  // #region Members 'Initialize' :: initialize()
+
+  /// Inicializar
+  Future<void> initialize(Company company);
+
+  // #endregion
+
+  // #region Members 'Owner' :: company
+
+  /// Empresa
+  late Company company;
+
+  // #endregion
+
   // #region Members 'Assets' :: assetsService, assets
 
   /// Serviço de recursos
@@ -41,7 +55,7 @@ abstract class IAssetsStore implements StoreBase {
   // #region Members 'Locations' :: locationsService, locations
 
   /// Serviço de localizações
-  late ServiceBase<Location> locationsService;
+  late LocationsServiceBase locationsService;
 
   /// Localizações
   late List<Location> locations;

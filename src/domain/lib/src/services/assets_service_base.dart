@@ -6,7 +6,7 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
   // #region Members 'Owner' :: company
 
   /// Empresa
-  Company get company;
+  late Company company;
 
   // #endregion
 

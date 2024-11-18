@@ -7,7 +7,7 @@ class AssetsRepository implements IAssetsRepository {
   // #region Constructors
 
   /// Implementação do repositório de recursos utilizando requisições HTTP
-  AssetsRepository({required this.company});
+  AssetsRepository();
 
   // #endregion
 
@@ -15,7 +15,7 @@ class AssetsRepository implements IAssetsRepository {
 
   /// Empresa
   @override
-  Company company;
+  late Company company;
 
   // #endregion
 

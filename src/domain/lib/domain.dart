@@ -8,10 +8,12 @@ export 'src/entities/location.dart';
 // Repositories
 export 'src/repositories/repository.dart';
 export 'src/repositories/assets_repository.dart';
+export 'src/repositories/locations_repository.dart';
 
 // Services
 export 'src/services/service_base.dart';
 export 'src/services/assets_service_base.dart';
+export 'src/services/locations_service_base.dart';
 
 // Models
 export 'src/models/tree/assets_tree.dart';

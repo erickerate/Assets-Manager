@@ -1,7 +1,7 @@
 import 'package:domain/domain.dart';
 
 /// Serviço para localizações
-class LocationsService implements ServiceBase<Location> {
+class LocationsService implements LocationsServiceBase {
   // #region Constructors
 
   /// Serviço para localizações
@@ -13,11 +13,21 @@ class LocationsService implements ServiceBase<Location> {
 
   /// Repositório
   @override
-  IRepository<Location> repository;
+  ILocationsRepository repository;
 
   // #endregion
 
   // #region Members 'Service' :: getAll()
+
+  @override
+  Company get company {
+    return this.repository.company;
+  }
+
+  @override
+  set company(Company value) {
+    this.repository.company = value;
+  }
 
   /// Obter todas localizações
   @override

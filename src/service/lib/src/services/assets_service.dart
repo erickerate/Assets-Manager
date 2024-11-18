@@ -17,11 +17,16 @@ class AssetsService extends AssetsServiceBase {
 
   // #endregion
 
-  // #region Members 'Service' :: getAll()
+  // #region Members 'Service' :: company, getAll()
 
   @override
   Company get company {
     return this.repository.company;
+  }
+
+  @override
+  set company(Company value){
+    this.repository.company = value;
   }
 
   /// Obter todos recursos

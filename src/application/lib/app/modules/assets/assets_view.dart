@@ -1,9 +1,11 @@
 import 'dart:isolate';
 import 'package:application/app/modules/assets/widgets/filters/asset_state_filters_widget.dart';
 import 'package:application/app/modules/assets/widgets/tree/tree_items_view.dart';
+import 'package:application/app/widgets/skeleton_loader_view.dart';
 import 'package:application/app/widgets/text_box_widget.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AssetsView extends StatefulWidget {
@@ -21,11 +23,10 @@ class _AssetsViewState extends State<AssetsView> {
     try {
       super.initState();
 
-      Modular.get<IAssetsStore>()
-          .receivePort
-          .listen(Modular.get<IAssetsStore>().listen);
-
-      WidgetsBinding.instance.addPostFrameCallback((_) async {});
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        Company company = ModalRoute.of(context)?.settings.arguments as Company;
+        // this.controller.initialize(company);
+      });
     } catch (exception) {
       throw Exception("Fail in initState(): $exception");
     }
@@ -114,9 +115,13 @@ class _AssetsViewState extends State<AssetsView> {
 
             // #region Árvore
 
-            const Flexible(
-              child: TreeItemsView(),
-            ),
+            Observer(builder: (_) {
+              return Flexible(
+                child: this.controller.isLoading
+                    ? const SkeletonLoaderView()
+                    : const TreeItemsView(),
+              );
+            }),
 
             // #endregion
           ],
