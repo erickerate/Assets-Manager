@@ -86,9 +86,9 @@ Assets Manager is comprised of four main projects, each playing a specific role 
 1. **Tree builder algorithm optimization**: Improve the asset tree construction algorithm to have low asymptotic complexity ✅
 2. **Optimize filter processing**: Implement the use of isolate to filter assets ✅
 3. **Virtualization rendering techniques***: Apply virtual rendering at all levels of the tree to improve efficiency and user experience ✅
-4. **Testing and coverage strategies**: Implement unit, integration and test coverage tests. ⌛
-5. **Handling unexpected exceptions**: Implement strategies to capture errors and unexpected exceptions, ensuring stability and providing appropriate responses to critical failures in the application ⌛
-6. **Theme Customization**: Add support for light and dark theme selection, allowing users to switch between modes and improve the visual experience according to their preference or environment ⌛
+4. **Theme Customization**: Add support for light and dark theme selection, allowing users to switch between modes and improve the visual experience according to their preference or environment ✅
+5. **Testing and coverage strategies**: Implement unit, integration and test coverage tests. ⌛
+6. **Handling unexpected exceptions**: Implement strategies to capture errors and unexpected exceptions, ensuring stability and providing appropriate responses to critical failures in the application ⌛
 7. **Internationalization and localization**: Configure support for multiple languages ​​and regional formats, allowing the application to adapt to users in different locations ⌛
 
 ## Future features
