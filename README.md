@@ -87,7 +87,7 @@ Assets Manager is comprised of four main projects, each playing a specific role 
 2. **Optimize filter processing**: Implement the use of isolate to filter assets ✅
 3. **Virtualization rendering techniques***: Apply virtual rendering at all levels of the tree to improve efficiency and user experience ✅
 4. **Theme Customization**: Add support for light and dark theme selection, allowing users to switch between modes and improve the visual experience according to their preference or environment ✅
-5. **Testing and coverage strategies**: Implement unit, integration and test coverage tests. ⌛
+5. **Testing and coverage strategies**: Implement unit, integration and test coverage tests. ✅
 6. **Handling unexpected exceptions**: Implement strategies to capture errors and unexpected exceptions, ensuring stability and providing appropriate responses to critical failures in the application ⌛
 7. **Internationalization and localization**: Configure support for multiple languages ​​and regional formats, allowing the application to adapt to users in different locations ⌛
 
@@ -98,6 +98,10 @@ Assets Manager is comprised of four main projects, each playing a specific role 
 3. **Inspect Assets**: Enable viewing of assets in greater detail, making it possible to schedule automatic maintenance or generate inspection checklists. This ensures that the application not only assists in monitoring, but also facilitates preventive maintenance.
 4. **Service Registration**: Enable the creation of services for an asset or group of assets. Each service can contain information such as the type of maintenance (preventive, corrective, predictive), date performed, photographic records, and others. Based on knowledge of the asset structure, the application would allow the selection of components or materials needed to perform the service. Each material can be associated with its respective ERP code, facilitating logistics planning and the requisition of parts from the inventory system. It is also possible to export a Service Report containing the items mentioned above. In this additional module, a history of services performed on the assets can be maintained, containing the materials used, execution time and professionals involved. This history can be used for predictive analysis, helping to identify failure patterns and improve the predictability of problems. In addition, knowing the list of materials and maintenance schedule of the assets, the application can automatically generate and schedule service orders, saving time and reducing the risk of errors and delays.
 5. **Geospatial Mapping**: Incorporate a geospatial map that displays the location of each unit and its assets, allowing for quick navigation and providing a macro-level view.
+
+## Testing and coverage strategies
+
+![Tests](https://github.com/erickerate/Assets-Manager/blob/main/assets/tests.png)
    
 ## Getting Started
   
