@@ -1,6 +1,9 @@
 <div align="center">
    <h3 align="center">@Tractian Challenge 🧢</h3>
    A high-performance mobile application for industrial asset management, designed to organize and visualize large volumes of complex data in a hierarchical tree structure.
+
+   
+   <br>[**Try a real-time demo app**](https://appetize.io/app/b_ifyci54i5pcq3aou6oiorhdfou?device=pixel8&osVersion=14.0) 🚀📱
 </div>
 
 ## Application Overview
