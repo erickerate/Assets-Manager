@@ -1,3 +1,4 @@
+import 'package:application/app/resources/object_image.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -162,8 +163,8 @@ class _TreeItemViewState extends State<TreeItemView> {
                         left: treeItem.hasChildren || treeItem.isRoot ? 1.5 : 7,
                       ),
                       child: Center(
-                        child: Image.asset(
-                          "assets/images/${treeItem.type}.png",
+                        child: ObjectImage.getByKey(
+                          "${treeItem.type}.png",
                           height: 24,
                           width: 24,
                         ),
@@ -196,8 +197,8 @@ class _TreeItemViewState extends State<TreeItemView> {
                     if (componentTreeItem != null &&
                         componentTreeItem.isEnergySensor) ...[
                       const Padding(padding: EdgeInsets.only(right: 6)),
-                      Image.asset(
-                        "assets/images/${componentTreeItem.sensorType}.png",
+                      ObjectImage.getByKey(
+                        "${componentTreeItem.sensorType}.png",
                       ),
                     ],
 
@@ -208,8 +209,8 @@ class _TreeItemViewState extends State<TreeItemView> {
                     if (treeItemWithStatus != null &&
                         treeItemWithStatus.isAlert) ...[
                       const Padding(padding: EdgeInsets.only(right: 6)),
-                      Image.asset(
-                        "assets/images/${treeItemWithStatus.status}.png",
+                      ObjectImage.getByKey(
+                        "${treeItemWithStatus.status}.png",
                       ),
                     ]
 
