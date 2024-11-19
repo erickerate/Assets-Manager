@@ -63,6 +63,14 @@ To avoid crashes when applying filters to very large trees, Isolates was used so
 
 To avoid performance issues, especially with large asset lists, ListView.builder has been implemented at all levels of the tree to render the tree virtually. This component loads only the currently visible items, unlike a simple ListView, which renders all items at once. This approach increases the efficiency of the application by keeping memory usage and rendering time low, providing a more fluid navigation experience.
 
+## Benchmark Performance
+
+### Lazy loading with ListView.builder
+
+The asset listing is loaded efficiently using lazy loading with ListView.builder. This technique increases application efficiency by virtually loading the listing items at every level while keeping memory usage and rendering time low, as illustrated in the following video.
+
+https://github.com/user-attachments/assets/0c821c61-0ea3-4eb6-94ef-a74f29f6918e
+
 ## Architecture
 
 The application emphasizes separation of concerns, adhering to SOLID, Clean Architecture/Code, and Domain-Driven Design (DDD) principles.
