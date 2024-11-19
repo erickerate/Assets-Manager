@@ -3,7 +3,7 @@ import 'package:domain/domain.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Companies Repository', () {
+  group('Companies Repository ::', () {
     final repository = CompaniesRepository();
 
     test('Must get all companies', () async {
@@ -15,7 +15,7 @@ void main() {
     });
   });
 
-  group('Locations Repository', () {
+  group('Locations Repository ::', () {
     late Company company;
 
     setUp(() async {
@@ -36,7 +36,7 @@ void main() {
     });
   });
 
-  group('Assets Repository', () {
+  group('Assets Repository ::', () {
     late Company company;
 
     setUp(() async {
@@ -48,7 +48,7 @@ void main() {
     test('Must get all assets', () async {
       final assetsRepository = AssetsRepository();
       assetsRepository.company = company;
-      
+
       final assets = await assetsRepository.getAll();
 
       expect(assets, isA<List<Asset>>());

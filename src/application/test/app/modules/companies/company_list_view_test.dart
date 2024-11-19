@@ -25,8 +25,9 @@ void main() {
     companies = items.map((json) => Company.fromJson(json)).toList();
   });
 
-  group('CompanyListView :: ', () {
-    testWidgets('Must correctly load the companies listing', (WidgetTester tester) async {
+  group('CompanyListView ::', () {
+    testWidgets('Must correctly load the companies listing view',
+        (WidgetTester tester) async {
       // #region Arrange
 
       when(mockCompaniesService.getAll()).thenAnswer((_) async => companies);
@@ -65,7 +66,6 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Após carregar
       for (Company listageItem in listageItems) {
         String companyText = "${listageItem.name!} Unit";
         expect(find.text(companyText), findsOneWidget);

@@ -2,7 +2,7 @@ import 'package:domain/domain.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Location Entity :: ', () {
+  group('Location Entity ::', () {
     test('Must serialize', () async {
       Location location = Location(
           id: "6a9b31a1b62cbf0062dd8a89",

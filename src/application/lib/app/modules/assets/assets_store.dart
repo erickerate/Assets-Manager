@@ -10,26 +10,46 @@ class AssetsStore = AssetsStoreBase with _$AssetsStore;
 
 /// Implementação da loja de recursos com MobX
 abstract class AssetsStoreBase with Store implements IAssetsStore {
-  // #region Members 'Initialize' :: initialize()
+  // #region Constructors
+
+  /// Implementação da loja de recursos com MobX
+  AssetsStoreBase() {
+    this.assetsService = Modular.get<AssetsServiceBase>();
+    this.locationsService = Modular.get<LocationsServiceBase>();
+  }
+
+  // #endregion
+
+  // #region Members 'Initialize' :: initialize(), initialized, setInitialized()
 
   /// Inicializar
   @override
   Future<void> initialize(Company company) async {
     try {
       this.company = company;
-      this.assetsService = Modular.get<AssetsServiceBase>();
       this.assetsService.company = this.company;
-      this.locationsService = Modular.get<LocationsServiceBase>();
       this.locationsService.company = this.company;
 
       Modular.get<IAssetsStore>()
           .receivePort
           .listen(Modular.get<IAssetsStore>().listen);
 
-      this.dispatchIsLoading(false);
+      this.setInitialized(true);
     } on Exception catch (exception) {
       throw Exception("Fail in initialize(): $exception");
     }
+  }
+
+  /// Inicializado?
+  @override
+  @observable
+  bool initialized = false;
+
+  /// Definir inicializado
+  @override
+  @action
+  void setInitialized(bool initialized) {
+    this.initialized = initialized;
   }
 
   // #endregion
@@ -107,7 +127,7 @@ abstract class AssetsStoreBase with Store implements IAssetsStore {
       this.locations = await this.locationsService.getAll();
 
       AssetsTree assetsTree =
-          this.assetsService.buildAssetsTree(this.assets, this.locations);
+          AssetsServiceBase.buildAssetsTree(this.assets, this.locations);
       for (TreeItem treeItem in assetsTree.stackItems) {
         ITreeItemStore treeItemStore = Modular.get<ITreeItemStore>();
         treeItemStore.treeItem = treeItem;

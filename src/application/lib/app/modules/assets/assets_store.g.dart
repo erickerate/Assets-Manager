@@ -17,6 +17,22 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
               name: 'AssetsStoreBase.hasFilters'))
           .value;
 
+  late final _$initializedAtom =
+      Atom(name: 'AssetsStoreBase.initialized', context: context);
+
+  @override
+  bool get initialized {
+    _$initializedAtom.reportRead();
+    return super.initialized;
+  }
+
+  @override
+  set initialized(bool value) {
+    _$initializedAtom.reportWrite(value, super.initialized, () {
+      super.initialized = value;
+    });
+  }
+
   late final _$assetsAtom =
       Atom(name: 'AssetsStoreBase.assets', context: context);
 
@@ -170,9 +186,24 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
         .run(() => super.dispatchIsLoading(isLoading));
   }
 
+  late final _$AssetsStoreBaseActionController =
+      ActionController(name: 'AssetsStoreBase', context: context);
+
+  @override
+  void setInitialized(bool initialized) {
+    final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
+        name: 'AssetsStoreBase.setInitialized');
+    try {
+      return super.setInitialized(initialized);
+    } finally {
+      _$AssetsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
+initialized: ${initialized},
 assets: ${assets},
 treeItemStores: ${treeItemStores},
 locations: ${locations},

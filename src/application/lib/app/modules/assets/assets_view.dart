@@ -25,7 +25,7 @@ class _AssetsViewState extends State<AssetsView> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         Company company = ModalRoute.of(context)?.settings.arguments as Company;
-        // this.controller.initialize(company);
+        await this.controller.initialize(company);
       });
     } catch (exception) {
       throw Exception("Fail in initState(): $exception");
@@ -51,22 +51,28 @@ class _AssetsViewState extends State<AssetsView> {
         automaticallyImplyLeading: true,
         flexibleSpace: SafeArea(
           child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  "assets/images/company.png",
-                ),
-                const Padding(padding: EdgeInsets.only(right: 6)),
-                Text(
-                  "Assets / ${this.controller.assetsService.company.name!} Unit",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    overflow: TextOverflow.ellipsis,
+            child: Observer(builder: (_) {
+              if (!this.controller.initialized) {
+                return const Text("");
+              }
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/company.png",
                   ),
-                ),
-              ],
-            ),
+                  const Padding(padding: EdgeInsets.only(right: 6)),
+                  Text(
+                    "Assets / ${this.controller.assetsService.company.name!} Unit",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              );
+            }),
           ),
         ),
         leading: BackButton(
@@ -117,10 +123,9 @@ class _AssetsViewState extends State<AssetsView> {
 
             Observer(builder: (_) {
               return Flexible(
-                child: this.controller.isLoading
-                    ? const SkeletonLoaderView()
-                    : const TreeItemsView(),
-              );
+                  child: this.controller.initialized
+                      ? const TreeItemsView()
+                      : const SkeletonLoaderView());
             }),
 
             // #endregion

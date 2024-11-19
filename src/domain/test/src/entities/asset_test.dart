@@ -2,7 +2,7 @@ import 'package:domain/domain.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Asset Entity :: ', () {
+  group('Asset Entity ::', () {
     test('Must serialize', () async {
       Asset asset = Asset(
         id: "6a9b48fdb62cbf0062dd5c2d",

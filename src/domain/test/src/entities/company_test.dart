@@ -2,7 +2,7 @@ import 'package:domain/domain.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Company Entity :: ', () {
+  group('Company Entity ::', () {
     test('Must serialize', () async {
       Company company = Company(id: "662fd0ee639069143a8fc387", name: "Jaguar");
 

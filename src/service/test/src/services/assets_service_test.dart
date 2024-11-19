@@ -3,24 +3,15 @@ import 'dart:io';
 
 import 'package:darq/darq.dart';
 import 'package:domain/domain.dart';
-import 'package:mockito/mockito.dart';
-import 'package:service/service.dart';
 import 'package:test/test.dart';
 
-
-
-
-class AssetsRepositoryMock extends Mock implements IAssetsRepository {}
-
 void main() {
-  group("Tree Assets :: ", () {
+  group("Tree Assets ::", () {
     // #region Setup
 
     late List<Asset> assets;
     late List<Location> locations;
 
-    final AssetsRepositoryMock assetsRepositoryMock = AssetsRepositoryMock();
-    late AssetsService assetsService;
     AssetsTree? assetsTree;
     setUp(() async {
       // Ativos
@@ -34,9 +25,6 @@ void main() {
       jsonString = await locationsFile.readAsString();
       items = json.decode(jsonString);
       locations = items.map((json) => Location.fromJson(json)).toList();
-
-      // Serviços
-      assetsService = AssetsService(repository: assetsRepositoryMock);
     });
 
     // #endregion
@@ -46,7 +34,7 @@ void main() {
         () async {
       // #region Act
 
-      assetsTree = assetsService.buildAssetsTree(assets, locations);
+      assetsTree = AssetsServiceBase.buildAssetsTree(assets, locations);
 
       // #endregion
 

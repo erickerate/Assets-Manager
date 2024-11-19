@@ -30,14 +30,14 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
   // #region Members 'Tree' :: buildAssetsTree()
 
   /// Construir árvore de ativos
-  AssetsTree buildAssetsTree(List<Asset> assets, List<Location> locations) {
+  static AssetsTree buildAssetsTree(
+      List<Asset> assets, List<Location> locations) {
     try {
       // #region 1. Cria itens Localizações / Recursos
 
       AssetsTree assetsTree = AssetsTree();
       TreeItem treeItem;
       List<TreeItem> stackItems = <TreeItem>[];
-      DateTime start = DateTime.now();
 
       // Localizações
       for (Location location in locations) {
@@ -51,16 +51,9 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
         assetsTree.map.putIfAbsent(asset.id!, () => treeItem);
       }
 
-      DateTime end = DateTime.now();
-      print(
-        "Passo 1: Criar itens Localizações/Recursos (${end.difference(start).inSeconds} s)",
-      );
-
       // #endregion
 
       // #region 2. Constrói estrutura
-
-      start = DateTime.now();
 
       // Navegação O(n)
       TreeItem parentTreeItem;
@@ -94,11 +87,6 @@ abstract class AssetsServiceBase extends ServiceBase<Asset> {
         parentTreeItem = assetsTree.map[treeItem.parentId]!;
         treeItem.ascendants = [...parentTreeItem.ascendants, parentTreeItem];
       }
-
-      end = DateTime.now();
-      print(
-        "Passo 2: Constrói estrutura (${end.difference(start).inSeconds} s)",
-      );
 
       return assetsTree;
 

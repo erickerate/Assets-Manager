@@ -9,6 +9,12 @@ abstract class IAssetsStore implements StoreBase {
   /// Inicializar
   Future<void> initialize(Company company);
 
+  /// Inicializado?
+  bool initialized = false;
+
+  /// Definir inicializado
+  void setInitialized(bool initialized);
+
   // #endregion
 
   // #region Members 'Owner' :: company
